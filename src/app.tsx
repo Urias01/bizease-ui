@@ -1,14 +1,17 @@
+import { Helmet, HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "./components/theme/theme-provider";
-import { ThemeToggle } from "./components/theme/theme-toggle";
-import { Button } from "./components/ui/button";
+import { Toaster } from "sonner";
+import { RouterProvider } from "react-router-dom";
+import { router } from './routes';
 
 export function App() {
   return (
-    <ThemeProvider defaultTheme="system" storageKey="bizease-theme">
-      <Button asChild>
-        <ThemeToggle></ThemeToggle>
-      </Button>
-      <h1>Biz Ease</h1>
-    </ThemeProvider>
+    <HelmetProvider>
+      <ThemeProvider defaultTheme="light" storageKey="bizease-theme">
+        <Helmet titleTemplate="%s | bizease" />
+        <Toaster richColors />
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </HelmetProvider>
   );
 }
