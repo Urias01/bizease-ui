@@ -5,87 +5,88 @@
 @layer base {
   :root {
     /* Cores de fundo e texto */
-    --background: 39, 66%, 81%; /* Pale Cream */
-    --foreground: 194, 33%, 8%; /* Very Dark Blue */
+    --background: 0, 0%, 88%; /* Light Gray (Baseado no #E0E0E0) */
+    --foreground: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
 
     /* Cores de cartões e popovers */
-    --card:  39, 66%, 81%; /* Pale Cream */
-    --card-foreground: 194, 33%, 8%; /* Very Dark Blue */
-    --popover: 39, 66%, 81%; /* Pale Cream */
-    --popover-foreground: 194, 33%, 8%; /* Very Dark Blue */
+    --card: 0, 0%, 88%; /* Light Gray (Baseado no #E0E0E0) */
+    --card-foreground: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
+    --popover: 0, 0%, 88%; /* Light Gray (Baseado no #E0E0E0) */
+    --popover-foreground: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
 
     /* Cores primárias e secundárias */
-    --primary: 181, 84%, 33%; /* Teal */
-    --primary-foreground: 39, 66%, 81%; /* Pale Cream */
-    --secondary: 182, 72%, 27%; /* Dark Teal */
-    --secondary-foreground: 39, 66%, 81%; /* Pale Cream */
+    --primary: 36, 82%, 58%; /* Orange (Baseado no #F0a429) */
+    --primary-foreground: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
+    --secondary: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
+    --secondary-foreground: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
 
     /* Cores de elementos desativados e acentuados */
-    --muted: 182, 72%, 27%; /* Dark Teal */
-    --muted-foreground: 0, 0%, 4%; /* Almost Black */
-    --accent: 182, 72%, 27%; /* Dark Teal */
-    --accent-foreground: 39, 66%, 81%; /* Pale Cream */
+    --muted: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
+    --muted-foreground: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
+    --accent: 36, 82%, 58%; /* Orange (Baseado no #F0a429) */
+    --accent-foreground: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
 
     /* Cores de erro e bordas */
-    --destructive: 0, 0%, 4%; /* Almost Black */
-    --destructive-foreground: 39, 66%, 81%; /* Pale Cream */
-    --border: 182, 72%, 27%; /* Dark Teal */
+    --destructive: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
+    --destructive-foreground: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
+    --border: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
 
     /* Cores de entrada e anéis de foco */
-    --input: 182, 72%, 27%; /* Dark Teal */
-    --ring: 181, 84%, 33%; /* Teal */
+    --input: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
+    --ring: 36, 82%, 58%; /* Orange (Baseado no #F0a429) */
 
     /* Raio da borda */
     --radius: 0.5rem;
 
-    /* Cores de gráficos (mantido como padrão, ajustar se necessário) */
-    --chart-1: 181, 84%, 33%; /* Teal */
-    --chart-2: 182, 72%, 27%; /* Dark Teal */
-    --chart-3: 194, 33%, 8%; /* Very Dark Blue */
-    --chart-4: 39, 66%, 81%; /* Pale Cream */
-    --chart-5: 0, 0%, 4%;/* Almost Black */
+    /* Cores de gráficos */
+    --chart-1: 36, 82%, 58%; /* Orange (Baseado no #F0a429) */
+    --chart-2: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
+    --chart-3: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
+    --chart-4: 0, 0%, 88%; /* Light Gray (Baseado no #E0E0E0) */
+    --chart-5: 0, 0%, 4%; /* Almost Black (Padrão) */
   }
 
   .dark {
     /* Cores de fundo e texto no modo escuro */
-    --background: 194, 33%, 8%; /* Very Dark Blue */
-    --foreground: 39, 66%, 81%; /* Pale Cream */
+    --background: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
+    --foreground: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
 
     /* Cores de cartões e popovers no modo escuro */
-    --card: 194, 33%, 8%; /* Very Dark Blue */
-    --card-foreground: 39, 66%, 81%; /* Pale Cream */
-    --popover: 194, 33%, 8%; /* Very Dark Blue */
-    --popover-foreground: 39, 66%, 81%; /* Pale Cream */
+    --card: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
+    --card-foreground: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
+    --popover: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
+    --popover-foreground: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
 
     /* Cores primárias e secundárias no modo escuro */
-    --primary: 39, 66%, 81%; /* Pale Cream */
-    --primary-foreground: 194, 33%, 8%; /* Very Dark Blue */
-    --secondary: 181, 84%, 33%; /* Teal */
-    --secondary-foreground: 39, 66%, 81%; /* Pale Cream */
+    --primary: 181, 84%, 33%; /* Teal (Baseado no #127475) */
+    --primary-foreground: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
+    --secondary: 207, 31%, 28%; /* Dark Grayish Blue (Baseado no #244248) */
+    --secondary-foreground: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
 
     /* Cores de elementos desativados e acentuados no modo escuro */
-    --muted: 181, 84%, 33%; /* Teal */
-    --muted-foreground: 0, 0%, 4%; /* Almost Black */
-    --accent: 181, 84%, 33%; /* Teal */
-    --accent-foreground: 39, 66%, 81%; /* Pale Cream */
+    --muted: 207, 31%, 28%; /* Dark Grayish Blue (Baseado no #244248) */
+    --muted-foreground: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
+    --accent: 181, 84%, 33%; /* Teal (Baseado no #127475) */
+    --accent-foreground: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
 
     /* Cores de erro e bordas no modo escuro */
-    --destructive: 0, 0%, 4%; /* Almost Black */
-    --destructive-foreground: 39, 66%, 81%; /* Pale Cream */
-    --border: 181, 84%, 33%; /* Teal */
+    --destructive: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
+    --destructive-foreground: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
+    --border: 207, 31%, 28%; /* Dark Grayish Blue (Baseado no #244248) */
 
     /* Cores de entrada e anéis de foco no modo escuro */
-    --input: 181, 84%, 33%; /* Teal */
-    --ring: 181, 84%, 33%; /* Teal */
+    --input: 207, 31%, 28%; /* Dark Grayish Blue (Baseado no #244248) */
+    --ring: 181, 84%, 33%; /* Teal (Baseado no #127475) */
 
-    /* Cores de gráficos (mantido como padrão, ajustar se necessário) */
-    --chart-1: 181, 84%, 33%; /* Teal */
-    --chart-2: 182, 72%, 27%; /* Dark Teal */
-    --chart-3: 194, 33%, 8%; /* Very Dark Blue */
-    --chart-4: 39, 66%, 81%; /* Pale Cream */
-    --chart-5: 0, 0%, 4%; /* Almost Black */
+    /* Cores de gráficos */
+    --chart-1: 181, 84%, 33%; /* Teal (Baseado no #127475) */
+    --chart-2: 207, 31%, 28%; /* Dark Grayish Blue (Baseado no #244248) */
+    --chart-3: 39, 66%, 81%; /* Pale Cream (Baseado no #f2D5a6) */
+    --chart-4: 0, 90%, 11%; /* Very Dark Red (Baseado no #0c1618) */
+    --chart-5: 0, 0%, 4%; /* Almost Black (Padrão) */
   }
 }
+
 
 @layer base {
   * {

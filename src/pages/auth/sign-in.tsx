@@ -24,7 +24,7 @@ export function SignIn() {
   });
 
   async function handleSignIn(data: SignInForm) {
-    await new Promise((resolve, reject) => {
+    await new Promise((resolve, _) => {
       setInterval(() => {
         resolve(true);
       }, 2000);
@@ -36,8 +36,12 @@ export function SignIn() {
     <>
       <Helmet title="Login" />
       <div className="p-8">
-        <Button variant={"ghost"} asChild className="absolute right-8 top-8 bg-foreground text-background">
-          <Link to="/">Novo estabelecimento</Link>
+        <Button
+          variant={"ghost"}
+          asChild
+          className="absolute right-8 top-8 bg-primary dark:bg-secondary text-foreground"
+        >
+          <Link to="/sign-up">Novo estabelecimento</Link>
         </Button>
 
         <div className="flex w-[350px] flex-col justify-center gap-6">
@@ -53,11 +57,11 @@ export function SignIn() {
               <Input
                 id="email"
                 type="email"
-                className="bg-[#244248] border-none"
+                className="bg-zinc-300 dark:bg-primary border-none"
                 {...register("email")}
               />
               {errors.email && (
-                <span className="mt-2 text-red-400">
+                <span className="mt-2 text-red-500">
                   {errors.email.message}
                 </span>
               )}
@@ -67,11 +71,11 @@ export function SignIn() {
               <Input
                 id="password"
                 type="password"
-                className="bg-[#244248] border-none"
+                className="bg-zinc-300 dark:bg-primary border-none"
                 {...register("password")}
               />
               {errors.password && (
-                <span className="mt-2 text-red-400">
+                <span className="mt-2 text-red-500">
                   {errors.password.message}
                 </span>
               )}
@@ -80,7 +84,7 @@ export function SignIn() {
               </p>
             </div>
             <Button
-              className="w-full bg-muted text-foreground hover:bg-[#37646d] 
+              className="w-full bg-primary text-foreground hover:bg-secondary 
                 enabled:hover:cursor-pointer disabled:hover:cursor-not-allowed disabled:opacity-50 "
               type="submit"
               disabled={isSubmitting}

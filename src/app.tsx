@@ -7,7 +7,7 @@ import { router } from './routes';
 export function App() {
   return (
     <HelmetProvider>
-      <ThemeProvider defaultTheme="light" storageKey="bizease-theme">
+      <ThemeProvider defaultTheme="dark" storageKey="bizease-theme">
         <Helmet titleTemplate="%s | bizease" />
         <Toaster richColors />
         <RouterProvider router={router} />
