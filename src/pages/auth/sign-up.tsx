@@ -42,7 +42,7 @@ export function SignUp() {
         <Button
           variant={"ghost"}
           asChild
-          className="absolute right-8 top-8 bg-primary hover:bg-secondary text-foreground"
+          className="absolute right-8 top-8 bg-primary text-foreground"
         >
           <Link to="/sign-in">Sign-in</Link>
         </Button>
@@ -120,7 +120,7 @@ export function SignUp() {
               )}
             </div>
             <Button
-              className="w-full bg-primary text-foreground hover:bg-secondary
+              className="w-full bg-primary text-foreground
                 enabled:hover:cursor-pointer disabled:hover:cursor-not-allowed disabled:opacity-50 "
               type="submit"
               disabled={isSubmitting}
