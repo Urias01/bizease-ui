@@ -22,7 +22,7 @@ export function AuthLayout() {
           )}
         </div>
         <footer className="text-sm  text-foreground">
-          Painel do parceiro &copy; bizease - {new Date().getFullYear()}
+          &copy; bizease - {new Date().getFullYear()}
         </footer>
       </div>
 

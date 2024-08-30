@@ -13,7 +13,6 @@ export const router = createBrowserRouter([
     element: <AppLayout />,
     children: [
       { path: "", element: <Home /> },
-      { path: "/sign-up", element: <SignUp /> }
     ],
   },
   {
