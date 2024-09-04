@@ -24,8 +24,9 @@ export function SignIn() {
   });
 
   async function handleSignIn(data: SignInForm) {
-    await new Promise((resolve, _) => {
+    await new Promise((resolve) => {
       setInterval(() => {
+        alert(data);
         resolve(true);
       }, 2000);
     });
@@ -57,7 +58,7 @@ export function SignIn() {
               <Input
                 id="email"
                 type="email"
-                className="bg-zinc-300 dark:bg-primary border-none"
+                className="bg-secondary border-none"
                 {...register("email")}
               />
               {errors.email && (
@@ -71,7 +72,7 @@ export function SignIn() {
               <Input
                 id="password"
                 type="password"
-                className="bg-zinc-300 dark:bg-primary border-none"
+                className="bg-secondary border-none"
                 {...register("password")}
               />
               {errors.password && (

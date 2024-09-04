@@ -27,8 +27,9 @@ export function SignUp() {
   });
 
   async function handleSignUp(data: SignUpForm) {
-    await new Promise((resolve, _) => {
+    await new Promise((resolve) => {
         setInterval(() => {
+          alert(data)
           resolve(true);
         }, 2000);
       });
