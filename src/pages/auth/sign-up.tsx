@@ -1,10 +1,13 @@
+import { createFirstAccess } from "@/api/user/create-first-access";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";
+import { useMutation } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const signUpForm = z.object({
@@ -18,6 +21,8 @@ const signUpForm = z.object({
 type SignUpForm = z.infer<typeof signUpForm>;
 
 export function SignUp() {
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
@@ -26,14 +31,30 @@ export function SignUp() {
     resolver: zodResolver(signUpForm),
   });
 
+  const { mutateAsync: createFirstAccessFn } = useMutation({
+    mutationFn: createFirstAccess
+  })
+
+
   async function handleSignUp(data: SignUpForm) {
-    await new Promise((resolve) => {
-        setInterval(() => {
-          alert(data)
-          resolve(true);
-        }, 2000);
-      });
-      return null;
+    try {
+      await createFirstAccessFn({
+        email: data.email,
+        name: data.name,
+        password: data.password,
+        cnpj: data.cnpj,
+        commerceName: data.commerceName
+      })
+
+      toast.success('Restaurante cadastrado com sucesso!', {
+        action: {
+          label: 'Login',
+          onClick: () => navigate(`/sign-in?email=${data.email}`),
+        },
+      })
+    } catch {
+      toast.error('Erro ao cadastrar usuário e comércio')
+    }
   }
 
   return (
