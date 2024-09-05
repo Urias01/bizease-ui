@@ -1,78 +1,272 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { DollarSign, Loader2 } from "lucide-react";
+import {
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { format } from "date-fns";
+
+const COLOR_CLASSES = [
+  "fill-sky-500",
+  "fill-amber-500",
+  "fill-violet-500",
+  "fill-emerald-500",
+  "fill-rose-500",
+];
+
 export function Home() {
+  const chartData = [
+    { date: format(new Date(), "MM/dd/yyyy"), receipt: 213 },
+    { date: format(new Date(), "MM/dd/yyyy"), receipt: 32 },
+    { date: format(new Date(), "MM/dd/yyyy"), receipt: 113 },
+    { date: format(new Date(), "MM/dd/yyyy"), receipt: 80 },
+    { date: format(new Date(), "MM/dd/yyyy"), receipt: 15 },
+    { date: format(new Date(), "MM/dd/yyyy"), receipt: 58 },
+  ];
+
+  const popularProducts = [
+    { product: "Detergente", amount: 30 },
+    { product: "Amaciante", amount: 25 },
+    { product: "Pasta para brilho", amount: 18 },
+    { product: "Veja", amount: 43 },
+    { product: "Limpa alumínio", amount: 12 },
+  ];
   return (
     <>
       <h1>BizEase Home</h1>
       <section className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="border rounded-md p-8">
-          <h2 className="text-xl font-bold">Título</h2>
-          <p>Description</p>
-          <p>
-            <span className="text-green-500 font-bold">5 %</span> a mais que
-            semana passada
-          </p>
-        </div>
-        <div className="border rounded-md p-8">
-          <h2 className="text-xl font-bold">Título</h2>
-          <p>Description</p>
-          <p>
-            <span className="text-red-500 font-bold">-5 %</span> menos que
-            semana passada
-          </p>
-        </div>
-        <div className="border rounded-md p-8">
-          <h2 className="text-xl font-bold">Título</h2>
-          <p>Description</p>
-          <p>
-            <span className="text-green-500 font-bold">5 %</span> a mais que mês
-            passado
-          </p>
-        </div>
-        <div className="border rounded-md p-8">
-          <h2 className="text-xl font-bold">Título</h2>
-          <p>Description</p>
-          <p>
-            <span className="text-red-500 font-bold">-5 %</span> menos que mês
-            passado
-          </p>
-        </div>
+        <Card>
+          <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-base font-semibold">
+              Vendas (senana)
+            </CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent className="space-y-1">
+            <>
+              {/* <span className="text-2xl font-bold tracking-tight">
+                {monthCanceledOrdersAmount.amount.toLocaleString("pt-BR")}
+              </span> */}
+              <p className="text-xs text-muted-foreground">
+                <>
+                  <span className="text-emerald-500 dark:text-emerald-400">
+                    5%
+                  </span>{" "}
+                  em relação ao mês passado
+                </>
+              </p>
+            </>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-base font-semibold">
+              Cancelamentos (semana)
+            </CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent className="space-y-1">
+            <>
+              {/* <span className="text-2xl font-bold tracking-tight">
+                {monthCanceledOrdersAmount.amount.toLocaleString("pt-BR")}
+              </span> */}
+              <p className="text-xs text-muted-foreground">
+                <>
+                  <span className="text-rose-500 dark:text-rose-400">-5%</span>{" "}
+                  em relação ao mês passado
+                </>
+              </p>
+            </>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-base font-semibold">
+              Vendas (mês)
+            </CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent className="space-y-1">
+            <>
+              {/* <span className="text-2xl font-bold tracking-tight">
+                {monthCanceledOrdersAmount.amount.toLocaleString("pt-BR")}
+              </span> */}
+              <p className="text-xs text-muted-foreground">
+                <>
+                  <span className="text-emerald-500 dark:text-emerald-400">
+                    5%
+                  </span>{" "}
+                  em relação ao mês passado
+                </>
+              </p>
+            </>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-base font-semibold">
+              Cancelamentos (mês)
+            </CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent className="space-y-1">
+            <>
+              {/* <span className="text-2xl font-bold tracking-tight">
+                {monthCanceledOrdersAmount.amount.toLocaleString("pt-BR")}
+              </span> */}
+              <p className="text-xs text-muted-foreground">
+                <>
+                  <span className="text-rose-500 dark:text-rose-400">-5%</span>{" "}
+                  em relação ao mês passado
+                </>
+              </p>
+            </>
+          </CardContent>
+        </Card>
       </section>
-      <section className="flex flex-col md:flex-row gap-4 h-96">
-        <div className="flex flex-col gap-4 border rounded-md p-8 w-full md:w-3/4 overflow-hidden">
-          <h2 className="text-xl font-bold">Título</h2>
-          <p>Gráfico</p>
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            Voluptatibus voluptate ullam veniam omnis quibusdam totam alias
-            cupiditate, magni amet autem reprehenderit laudantium quaerat labore
-            quis deserunt nulla reiciendis fugit impedit itaque maxime quidem.
-            Odit ducimus possimus nam, cum non facilis laudantium dolorum quod
-            harum deserunt, atque ad explicabo vero aliquid? Lorem ipsum, dolor
-            sit amet consectetur adipisicing elit. Voluptatibus voluptate ullam
-            veniam omnis quibusdam totam alias cupiditate, magni amet autem
-            reprehenderit laudantium quaerat labore quis deserunt nulla
-            reiciendis fugit impedit itaque maxime quidem. Odit ducimus possimus
-            nam, cum non facilis laudantium dolorum quod harum deserunt, atque
-            ad explicabo vero aliquid? Lorem ipsum, dolor sit amet consectetur
-            adipisicing elit. Voluptatibus voluptate ullam veniam omnis
-            quibusdam totam alias cupiditate, magni amet autem reprehenderit
-            laudantium quaerat labore quis deserunt nulla reiciendis fugit
-            impedit itaque maxime quidem. Odit ducimus possimus nam, cum non
-            facilis laudantium dolorum quod harum deserunt, atque ad explicabo
-            vero aliquid?
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 border rounded-md p-8 w-full md:w-1/4 overflow-hidden">
-          <h2 className="text-xl font-bold">Produtos mais vendidos</h2>
-          <p>Gráfico</p>
-          <p>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            Voluptatibus voluptate ullam veniam omnis quibusdam totam alias
-            cupiditate, magni amet autem reprehenderit laudantium quaerat labore
-            quis deserunt nulla reiciendis fugit impedit itaque maxime quidem.
-            Odit ducimus possimus nam, cum non facilis laudantium dolorum quod
-            harum deserunt, atque ad explicabo vero aliquid?
-          </p>
-        </div>
+      <section className="grid grid-cols-9 gap-4">
+        <Card className="col-span-6">
+          <CardHeader className="flex-row items-center justify-between pb-8">
+            <div className="space-y-1">
+              <CardTitle className="text-base font-medium">
+                Receita no período
+              </CardTitle>
+              <CardDescription>Receira diária no período</CardDescription>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Label>Período</Label>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {chartData ? (
+              <ResponsiveContainer width="100%" height={240}>
+                <LineChart data={chartData} style={{ fontSize: 12 }}>
+                  <XAxis
+                    dataKey="date"
+                    tickLine={false}
+                    axisLine={false}
+                    dy={16}
+                  />
+                  <YAxis
+                    stroke="#888"
+                    axisLine={false}
+                    width={80}
+                    tickLine={false}
+                    tickFormatter={(value: number) =>
+                      value.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })
+                    }
+                  />
+                  <CartesianGrid vertical={false} className="stroke-muted" />
+                  <Line
+                    type="linear"
+                    strokeWidth={2}
+                    dataKey="receipt"
+                    stroke={"#aa2341"}
+                  />
+                  <Tooltip />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex h-[240px] w-full items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+        <Card className="col-span-3">
+          <CardHeader className="pb-8">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base font-medium">
+                Produtos populares
+              </CardTitle>
+              <BarChart className="h-4 w-4 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            {popularProducts ? (
+              <ResponsiveContainer width="100%" height={240}>
+                <PieChart style={{ fontSize: 12 }}>
+                  <Pie
+                    data={popularProducts}
+                    dataKey="amount"
+                    nameKey="product"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={86}
+                    innerRadius={64}
+                    strokeWidth={8}
+                    labelLine={false}
+                    label={({
+                      cx,
+                      cy,
+                      midAngle,
+                      innerRadius,
+                      outerRadius,
+                      value,
+                      index,
+                    }) => {
+                      const RADIAN = Math.PI / 180;
+                      const radius =
+                        12 + innerRadius + (outerRadius - innerRadius);
+                      const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                      const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+                      return (
+                        <text
+                          x={x}
+                          y={y}
+                          className="fill-muted-foreground text-xs"
+                          textAnchor={x > cx ? "start" : "end"}
+                          dominantBaseline="central"
+                        >
+                          {popularProducts[index].product.length > 12
+                            ? popularProducts[index].product
+                                .substring(0, 12)
+                                .concat("...")
+                            : popularProducts[index].product}{" "}
+                          ({value})
+                        </text>
+                      );
+                    }}
+                  >
+                    {popularProducts.map((_, index) => {
+                      return (
+                        <Cell
+                          key={`cell-${index}`}
+                          className={`${COLOR_CLASSES[index]} stroke-background hover:opacity-80`}
+                        />
+                      );
+                    })}
+                  </Pie>
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex h-[240px] w-full items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </section>
     </>
   );
