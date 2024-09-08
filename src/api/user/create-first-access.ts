@@ -15,7 +15,7 @@ export async function createFirstAccess({
   commerceName,
   cnpj,
 }: RegisterFirstUserAccess) {
-  api.post('/users/first-access', {
+  await api.post('/users/first-access', {
     name,
     email,
     password,

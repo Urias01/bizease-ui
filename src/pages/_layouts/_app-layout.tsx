@@ -1,8 +1,35 @@
 import { Header } from "@/components/header";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Box, Home, PackageOpen } from "lucide-react";
+import { useEffect } from "react";
+import { api } from "@/lib/axios";
+import { isAxiosError } from "axios";
 
 export function AppLayout() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const interceptorId = api.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (isAxiosError(error)) {
+          const status = error.response?.status
+          const code = error.response?.data.code
+
+          if (status === 401 && code === "UNAUTHORIZED") {
+            navigate("/sign-in", { replace: true });
+          } else {
+            throw error
+          }
+        }
+      }
+    );
+
+    return () => {
+      api.interceptors.response.eject(interceptorId);
+    }
+  }, [navigate]);
+
   return (
     <section className="flex h-min-screen">
       <div className="flex-none bg-secondary items-center">

@@ -1,10 +1,13 @@
+import { signIn } from "@/api/user/sign-in";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const signInForm = z.object({
@@ -12,10 +15,11 @@ const signInForm = z.object({
   password: z.string().min(6, "Senha precisa ter pelo menos 6 caracteres"),
 });
 
-type SignInForm = z.infer<typeof signInForm>;
+export type SignInForm = z.infer<typeof signInForm>;
 
 export function SignIn() {
-  const [searchParams] = useSearchParams()
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -24,19 +28,23 @@ export function SignIn() {
   } = useForm<SignInForm>({
     resolver: zodResolver(signInForm),
     defaultValues: {
-      email: searchParams.get('email') || '',
+      email: searchParams.get("email") || "",
     },
   });
 
+  const { mutateAsync: signInFn } = useMutation({
+    mutationFn: signIn,
+  })
+
   async function handleSignIn(data: SignInForm) {
-    await new Promise((resolve) => {
-      setInterval(() => {
-        alert(data);
-        resolve(true);
-      }, 2000);
+    await signInFn({ email: data.email, password: data.password }).then(() => {
+      toast.success('Login realizado com sucesso!')
+      navigate("/");
+    }).catch(() => {
+      toast.error('Usuário ou senha incorretos!')
     });
-    return null;
   }
+ 
 
   return (
     <>
