@@ -40,7 +40,7 @@ export function SignIn() {
   async function handleSignIn(data: SignInForm) {
     await signInFn({ email: data.email, password: data.password })
       .then((response) => {
-        localStorage.setItem("token", response.access_token);
+        localStorage.setItem("token", response.accessToken);
         toast.success("Login realizado com sucesso!");
         navigate("/");
       })

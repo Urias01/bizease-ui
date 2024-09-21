@@ -6,7 +6,7 @@ interface SignInRequest {
 }
 
 interface SignInResponse {
-  access_token: string
+  accessToken: string
 }
 
 export async function signIn({ email, password }: SignInRequest): Promise<SignInResponse> {

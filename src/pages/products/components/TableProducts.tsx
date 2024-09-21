@@ -28,11 +28,10 @@ export function ProductTable() {
     .parse(searchParams.get("page") ?? "1");
 
   const { data: result, isLoading: isLoadingProduct } = useQuery({
-    queryKey: ["products", page, commerceUuid, name, categorieId],
+    queryKey: ["products", page, name, categorieId],
     queryFn: () =>
       getProducts({
         page,
-        commerceUuid: "0f7b4a24-04b0-4b1f-b80b-48256e2bddb5",
         name,
         categorieId,
       }),

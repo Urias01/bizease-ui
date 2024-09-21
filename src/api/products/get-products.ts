@@ -5,7 +5,6 @@ export interface GetProductsQuery {
   page?: number | null;
   size?: number | null;
   name?: string | null;
-  commerceUuid?: string | null;
   categorieId?: string | null;
 }
 
@@ -30,14 +29,12 @@ export async function getProducts({
   page,
   size = 10,
   name,
-  commerceUuid,
   categorieId,
 }: GetProductsQuery) {
   const response = await api.get<ProductsResponse>("/products", {
     params: {
       page,
       size,
-      commerceUuid,
       name,
       categorieId,
     }
