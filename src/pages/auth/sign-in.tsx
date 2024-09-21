@@ -2,6 +2,7 @@ import { signIn } from "@/api/user/sign-in";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { api } from "@/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
@@ -34,17 +35,19 @@ export function SignIn() {
 
   const { mutateAsync: signInFn } = useMutation({
     mutationFn: signIn,
-  })
+  });
 
   async function handleSignIn(data: SignInForm) {
-    await signInFn({ email: data.email, password: data.password }).then(() => {
-      toast.success('Login realizado com sucesso!')
-      navigate("/");
-    }).catch(() => {
-      toast.error('Usuário ou senha incorretos!')
-    });
+    await signInFn({ email: data.email, password: data.password })
+      .then((response) => {
+        localStorage.setItem("token", response.access_token);
+        toast.success("Login realizado com sucesso!");
+        navigate("/");
+      })
+      .catch(() => {
+        toast.error("Usuário ou senha incorretos!");
+      });
   }
- 
 
   return (
     <>

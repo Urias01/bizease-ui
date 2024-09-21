@@ -14,7 +14,6 @@ import { useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { TableProductsSkeleton } from "./TableProductsSkeleton";
 import { Pencil } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export function ProductTable() {
   const [searchParams, setSearchParams] = useSearchParams();

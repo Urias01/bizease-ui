@@ -4,7 +4,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Search } from "lucide-react";
 
 export function TableProductsSkeleton() {
-  return Array.from({ length: 10 }).map((_, i) => {
+  return Array.from({ length: 5 }).map((_, i) => {
     return (
       <TableRow key={i}>
         <TableCell>

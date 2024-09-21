@@ -9,17 +9,30 @@ export function AppLayout() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    api.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem("token");
+        if (token) {
+          config.headers["Authorization"] = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+
     const interceptorId = api.interceptors.response.use(
       (response) => response,
       (error) => {
         if (isAxiosError(error)) {
-          const status = error.response?.status
-          const code = error.response?.data.code
+          const status = error.response?.status;
+          const code = error.response?.data.code;
 
           if (status === 401 && code === "UNAUTHORIZED") {
             navigate("/sign-in", { replace: true });
           } else {
-            throw error
+            throw error;
           }
         }
       }
@@ -27,7 +40,7 @@ export function AppLayout() {
 
     return () => {
       api.interceptors.response.eject(interceptorId);
-    }
+    };
   }, [navigate]);
 
   return (
@@ -42,7 +55,7 @@ export function AppLayout() {
             <Home className="h-4 w-4 mt-1" />
             Início
           </NavLink>
-          <NavLink to="/orders" className="flex align-middle gap-2 ml-4">
+          <NavLink to="/products" className="flex align-middle gap-2 ml-4">
             <PackageOpen className="h-4 w-4 mt-1" />
             Produtos
           </NavLink>

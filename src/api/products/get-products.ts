@@ -40,7 +40,7 @@ export async function getProducts({
       commerceUuid,
       name,
       categorieId,
-    },
+    }
   });
   return response.data;
 }
