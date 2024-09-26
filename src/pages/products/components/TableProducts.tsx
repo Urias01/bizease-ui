@@ -18,7 +18,6 @@ import { Pencil } from "lucide-react";
 export function ProductTable() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const commerceUuid = searchParams.get("commerceUuid");
   const categorieId = searchParams.get("categorieId");
   const name = searchParams.get("name");
 
@@ -37,13 +36,13 @@ export function ProductTable() {
       }),
   });
 
-  function handlePaginate(pageIndex: number) {
-    setSearchParams((state) => {
-      state.set("page", (pageIndex + 1).toString());
+  // function handlePaginate(pageIndex: number) {
+  //   setSearchParams((state) => {
+  //     state.set("page", (pageIndex + 1).toString());
 
-      return state;
-    });
-  }
+  //     return state;
+  //   });
+  // }
 
   return (
     <Table>

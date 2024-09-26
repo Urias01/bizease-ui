@@ -4,14 +4,16 @@ import { Box, Home, PackageOpen } from "lucide-react";
 import { useEffect } from "react";
 import { api } from "@/lib/axios";
 import { isAxiosError } from "axios";
+import { toast } from "sonner";
 
 export function AppLayout() {
   const navigate = useNavigate();
 
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     api.interceptors.request.use(
       (config) => {
-        const token = localStorage.getItem("token");
         if (token) {
           config.headers["Authorization"] = `Bearer ${token}`;
         }
@@ -29,8 +31,11 @@ export function AppLayout() {
           const status = error.response?.status;
           const code = error.response?.data.code;
 
-          if (status === 401 && code === "UNAUTHORIZED") {
+          console.log(error);
+          if (status === 401) {
+            // code === "UNAUTHORIZED"
             navigate("/sign-in", { replace: true });
+            toast.info("Sua sessão expirou")
           } else {
             throw error;
           }
@@ -41,7 +46,7 @@ export function AppLayout() {
     return () => {
       api.interceptors.response.eject(interceptorId);
     };
-  }, [navigate]);
+  }, [navigate, token]);
 
   return (
     <section className="flex h-min-screen">
