@@ -1,6 +1,6 @@
 import { Header } from "@/components/header";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Box, Home, PackageOpen } from "lucide-react";
+import { Box, Home, PackageOpen, PackageSearch } from "lucide-react";
 import { useEffect } from "react";
 import { api } from "@/lib/axios";
 import { isAxiosError } from "axios";
@@ -29,7 +29,7 @@ export function AppLayout() {
       (error) => {
         if (isAxiosError(error)) {
           const status = error.response?.status;
-          const code = error.response?.data.code;
+          // const code = error.response?.data.code;
 
           console.log(error);
           if (status === 401) {
@@ -63,6 +63,10 @@ export function AppLayout() {
           <NavLink to="/products" className="flex align-middle gap-2 ml-4">
             <PackageOpen className="h-4 w-4 mt-1" />
             Produtos
+          </NavLink>
+          <NavLink to="/categories" className="flex align-middle gap-2 ml-4">
+            <PackageSearch className="h-4 w-4 mt-1" />
+            Categorias
           </NavLink>
         </div>
       </div>

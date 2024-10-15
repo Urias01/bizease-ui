@@ -5,6 +5,7 @@ import { SignUp } from "./pages/auth/sign-up";
 import { AppLayout } from "./pages/_layouts/_app-layout";
 import { Home } from "./pages/home";
 import { Products } from "./pages/products";
+import { Categories } from "./pages/categories";
 
 
 
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "", element: <Home /> },
       { path: "/products", element: <Products /> },
+      { path: "/categories", element: <Categories /> },
     ],
   },
   {

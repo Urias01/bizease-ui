@@ -41,7 +41,7 @@ const productSchema = z.object({
 type ProductSchema = z.infer<typeof productSchema>;
 
 export function ProductForm() {
-  const [searchParams, _] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const form = useForm<ProductSchema>({
     resolver: zodResolver(productSchema),
@@ -79,8 +79,12 @@ export function ProductForm() {
       .then(() => {
         toast.success("Produto criado com sucesso");
       })
-      .catch((error: any) => {
-        toast.error(error.message);
+      .catch((error: unknown) => {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        } else {
+          toast.error("Ocorreu um erro desconhecido");
+        }
       });
 
     reset();
@@ -137,14 +141,18 @@ export function ProductForm() {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Categorias</SelectLabel>
-                      {result?.data?.length &&
+                      {result?.data?.length === 0 ? (
+                        <SelectLabel>Nenhuma categoria cadastrada</SelectLabel>
+                      ) : (
+                        result?.data?.length &&
                         result.data.map((category) => {
                           return (
                             <SelectItem key={category.id} value={category.id}>
                               {category.name}
                             </SelectItem>
                           );
-                        })}
+                        })
+                      )}
                     </SelectGroup>
                   </SelectContent>
                 </Select>

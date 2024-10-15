@@ -16,7 +16,7 @@ import { TableProductsSkeleton } from "./TableProductsSkeleton";
 import { Pencil } from "lucide-react";
 
 export function ProductTable() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const categorieId = searchParams.get("categorieId");
   const name = searchParams.get("name");
@@ -58,22 +58,29 @@ export function ProductTable() {
       </TableHeader>
       <TableBody>
         {isLoadingProduct && <TableProductsSkeleton />}
-        {result?.data?.length &&
-          result.data.map((product) => {
-            return (
-              <TableRow key={product.id}>
-                <TableCell>
-                  <Pencil className="h-3 w-3" />
-                </TableCell>
-                <TableCell>{product.id}</TableCell>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.unit}</TableCell>
-                <TableCell>
-                  {product.categories && product.categories.name}
+        {result?.data?.length !== undefined && result?.data?.length < 0
+          ? result.data.map((product) => {
+              return (
+                <TableRow key={product.id}>
+                  <TableCell>
+                    <Pencil className="h-3 w-3" />
+                  </TableCell>
+                  <TableCell>{product.id}</TableCell>
+                  <TableCell>{product.name}</TableCell>
+                  <TableCell>{product.unit}</TableCell>
+                  <TableCell>
+                    {product.categories && product.categories.name}
+                  </TableCell>
+                </TableRow>
+              );
+            })
+          : isLoadingProduct !== true && (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center">
+                  Nenhum produto encontrado.
                 </TableCell>
               </TableRow>
-            );
-          })}
+            )}
       </TableBody>
       <TableFooter>
         <TableRow className="h-8">

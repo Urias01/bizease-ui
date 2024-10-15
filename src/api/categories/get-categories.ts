@@ -12,7 +12,6 @@ interface CategoriesResponse {
     uuid: string,
     name: string,
     description: string,
-    commerce: any // Por enquanto
   }[];
   meta: {
     pageIndex: number;
