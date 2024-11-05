@@ -12,11 +12,11 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { z } from "zod";
-import { TableProductsSkeleton } from "./TableProductsSkeleton";
+import { TableProductsSkeleton } from "./product-skeleton-table";
 import { Pencil } from "lucide-react";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ProductForm } from "./ProductForm";
+import { ProductForm } from "./product-form";
 import { useState } from "react";
 import { toast } from "sonner";
 

@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
-import { ProductTable } from "./components/TableProducts";
+import { ProductTable } from "./components/product-table";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { ProductForm } from "./components/ProductForm";
+import { ProductForm } from "./components/product-form";
 
 export function Products() {
   return (
