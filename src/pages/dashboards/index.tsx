@@ -9,7 +9,7 @@ export function Dashboards() {
     <>
       <h1>Dashboard</h1>
       <section className="space-y-4">
-        <div className="flex gap-4 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-9 gap-4">
           <InputLoss />
 
           <BuyingSellingMetrics />

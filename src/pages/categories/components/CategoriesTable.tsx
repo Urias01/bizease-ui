@@ -47,30 +47,40 @@ export function CategoriesTable() {
       </TableHeader>
       <TableBody>
         {isLoadingCategories && <TableCategoriesSkeleton />}
-        {result?.data?.length !== undefined && result?.data?.length > 0 ? (
-          result.data.map((category) => {
-            return (
-              <TableRow key={category.id}>
-                <TableCell>
-                  <Pencil className="h-3 w-3" />
-                </TableCell>
-                <TableCell>{category.id}</TableCell>
-                <TableCell>{category.name}</TableCell>
-                <TableCell>
-                  {category.description.length > 84
-                    ? category.description.substring(0, 84).concat("...")
-                    : category.description}
-                </TableCell>
-              </TableRow>
-            );
-          })
-        ) : isLoadingCategories !== true && (
-          <TableRow>
-            <TableCell colSpan={4} className="text-center">
-              Nenhuma categoria encontrada.
-            </TableCell>
-          </TableRow>
-        )}
+        {result?.data?.length !== undefined && result?.data?.length > 0
+          ? result.data.map((category) => {
+              return (
+                <TableRow key={category.id}>
+                  <TableCell>
+                    <Pencil className="h-3 w-3" />
+                  </TableCell>
+                  <TableCell>{category.id}</TableCell>
+                  <TableCell>{category.name}</TableCell>
+                  <TableCell>
+                    {category.description.length > 84
+                      ? category.description.substring(0, 84).concat("...")
+                      : category.description}
+                  </TableCell>
+                </TableRow>
+              );
+            })
+          : isLoadingCategories !== true && (
+              // <TableRow>
+              //   <TableCell colSpan={4} className="text-center">
+              //     Nenhuma categoria encontrada.
+              //   </TableCell>
+              // </TableRow>
+              <TableRow>
+                  <TableCell>
+                    <Pencil className="h-3 w-3" />
+                  </TableCell>
+                  <TableCell>1</TableCell>
+                  <TableCell>Category</TableCell>
+                  <TableCell>
+                    Description
+                  </TableCell>
+                </TableRow>
+            )}
       </TableBody>
       <TableFooter>
         <TableRow className="h-8">

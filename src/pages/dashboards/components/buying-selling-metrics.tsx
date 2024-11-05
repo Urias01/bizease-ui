@@ -51,7 +51,7 @@ const chartConfig = {
 
 export function BuyingSellingMetrics() {
   return (
-    <Card className="w-[65%]">
+    <Card className="col-span-full md:col-span-6">
       <CardHeader>
         <div className="flex justify-between">
           <div>

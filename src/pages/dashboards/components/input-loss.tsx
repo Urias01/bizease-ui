@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/chart";
 import { DownloadIcon, TrendingUp } from "lucide-react";
 import React from "react";
-import { Label, PieChart, Pie } from "recharts";
+import { Label, PieChart, Pie, Cell } from "recharts";
 
 const response = [
   { product: "chrome", quantity: 275, priceTotal: 1000 },
@@ -22,6 +22,14 @@ const response = [
   { product: "firefox", quantity: 287, priceTotal: 1000 },
   { product: "edge", quantity: 173, priceTotal: 1000 },
   { product: "other", quantity: 190, priceTotal: 1000 },
+];
+
+const colors = [
+  "hsl(var(--chart-1))",
+  "hsl(var(--chart-2))",
+  "hsl(var(--chart-3))",
+  "hsl(var(--chart-4))",
+  "hsl(var(--chart-5))",
 ];
 
 const chartConfig = {
@@ -56,7 +64,7 @@ export function InputLoss() {
   }, []);
 
   return (
-    <Card className="w-[35%]">
+    <Card className="col-span-full md:col-span-3">
       <CardHeader>
         <div className="flex justify-between">
           <div>
@@ -84,6 +92,12 @@ export function InputLoss() {
               innerRadius={60}
               strokeWidth={5}
             >
+              {response.map((_, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={colors[index % colors.length]}
+                />
+              ))}
               <Label
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {

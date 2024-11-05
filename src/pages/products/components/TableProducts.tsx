@@ -103,11 +103,27 @@ export function ProductTable() {
                 );
               })
             : isLoadingProduct !== true && (
+                // <TableRow>
+                //   <TableCell colSpan={5} className="text-center">
+                //     Nenhum produto encontrado.
+                //   </TableCell>
+                // </TableRow>
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center">
-                    Nenhum produto encontrado.
-                  </TableCell>
-                </TableRow>
+                    <TableCell>
+                      <Button
+                        variant="outline"
+                        className="flex gap-2"
+                      >
+                        <Pencil className="h-3 w-3" />
+                      </Button>
+                    </TableCell>
+                    <TableCell>1</TableCell>
+                    <TableCell>Product</TableCell>
+                    <TableCell>15</TableCell>
+                    <TableCell>
+                      Category
+                    </TableCell>
+                  </TableRow>
               )}
         </TableBody>
         <TableFooter>
