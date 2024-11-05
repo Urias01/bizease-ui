@@ -54,7 +54,7 @@ export function Home() {
         <Card>
           <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-base font-semibold">
-              Vendas (senana)
+              Vendas (semana)
             </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -140,8 +140,8 @@ export function Home() {
           </CardContent>
         </Card>
       </section>
-      <section className="grid grid-cols-9 gap-4">
-        <Card className="col-span-6">
+      <section className="grid grid-cols-1 md:grid-cols-9 gap-4">
+        <Card className="col-span-full md:col-span-6">
           <CardHeader className="flex-row items-center justify-between pb-8">
             <div className="space-y-1">
               <CardTitle className="text-base font-medium">
@@ -193,7 +193,7 @@ export function Home() {
             )}
           </CardContent>
         </Card>
-        <Card className="col-span-3">
+        <Card className="col-span-full md:col-span-3">
           <CardHeader className="pb-8">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-medium">
@@ -258,6 +258,7 @@ export function Home() {
                       );
                     })}
                   </Pie>
+                  <Tooltip />
                 </PieChart>
               </ResponsiveContainer>
             ) : (

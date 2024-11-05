@@ -1,5 +1,6 @@
 import { getCategories } from "@/api/categories/get-categories";
 import { createProduct } from "@/api/products/create-product";
+import { getProductByUuid } from "@/api/products/get-product-by-uuid";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -25,10 +26,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { queryClient } from "@/lib/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
+
+interface ProductFormProps {
+  uuid?: string;
+}
 
 const productSchema = z.object({
   name: z.string().min(2, "O campo nome é obrigatório o preenchimento"),
@@ -36,12 +42,23 @@ const productSchema = z.object({
   minimumStock: z.coerce.number(),
   categoryId: z.string(),
   description: z.string(),
+  location: z.string(),
 });
 
 type ProductSchema = z.infer<typeof productSchema>;
 
-export function ProductForm() {
+export function ProductForm({ uuid }: ProductFormProps) {
   const [searchParams] = useSearchParams();
+
+  const { data: product, refetch } = useQuery({
+    queryKey: ["product", uuid],
+    queryFn: () => {
+      if (uuid) {
+        return getProductByUuid({ uuid });
+      }
+    },
+    enabled: false,
+  });
 
   const form = useForm<ProductSchema>({
     resolver: zodResolver(productSchema),
@@ -90,6 +107,23 @@ export function ProductForm() {
     reset();
   }
 
+  useEffect(() => {
+    if (uuid) {
+      refetch();
+    }
+
+    if (product) {
+      reset({
+        name: product.name,
+        unit: product.unit,
+        minimumStock: product.minimumStock,
+        categoryId: product.categoryId.toString(),
+        description: product.description,
+        location: product.location,
+      });
+    }
+  }, [product, refetch, reset, uuid]);
+
   return (
     <DialogContent>
       <DialogHeader>
@@ -128,14 +162,14 @@ export function ProductForm() {
             render={({ field }) => (
               <FormItem>
                 <Label>Categoria</Label>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  value={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione uma categoria" />
+                      <SelectValue>
+                        {result?.data?.find(
+                          (category) => category.id === field.value
+                        )?.name || "Selecione uma categoria"}
+                      </SelectValue>
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -159,6 +193,15 @@ export function ProductForm() {
               </FormItem>
             )}
           />
+          <div className="grid grid-cols-5 items-center gap-4">
+            <Label htmlFor="location">Localização:</Label>
+            <Textarea
+              className="col-span-5"
+              {...register("location")}
+              placeholder="Onde seu produto esta localizado."
+              id="location"
+            />
+          </div>
           <div className="grid grid-cols-5 items-center gap-4">
             <Label htmlFor="description">Descrição:</Label>
             <Textarea

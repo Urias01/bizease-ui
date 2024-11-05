@@ -1,56 +1,58 @@
 import { Header } from "@/components/header";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Box, Home, PackageOpen, PackageSearch } from "lucide-react";
-import { useEffect } from "react";
-import { api } from "@/lib/axios";
-import { isAxiosError } from "axios";
-import { toast } from "sonner";
+import { Outlet } from "react-router-dom";
+
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/sidebar";
+// import { useEffect } from "react";
+// import { api } from "@/lib/axios";
+// import { isAxiosError } from "axios";
+// import { toast } from "sonner";
 
 export function AppLayout() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    api.interceptors.request.use(
-      (config) => {
-        if (token) {
-          config.headers["Authorization"] = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
+  // useEffect(() => {
+  //   api.interceptors.request.use(
+  //     (config) => {
+  //       if (token) {
+  //         config.headers["Authorization"] = `Bearer ${token}`;
+  //       }
+  //       return config;
+  //     },
+  //     (error) => {
+  //       return Promise.reject(error);
+  //     }
+  //   );
 
-    const interceptorId = api.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (isAxiosError(error)) {
-          const status = error.response?.status;
-          // const code = error.response?.data.code;
+  //   const interceptorId = api.interceptors.response.use(
+  //     (response) => response,
+  //     (error) => {
+  //       if (isAxiosError(error)) {
+  //         const status = error.response?.status;
+  //         // const code = error.response?.data.code;
 
-          console.log(error);
-          if (status === 401) {
-            // code === "UNAUTHORIZED"
-            navigate("/sign-in", { replace: true });
-            toast.info("Sua sessão expirou")
-          } else {
-            throw error;
-          }
-        }
-      }
-    );
+  //         console.log(error);
+  //         if (status === 401) {
+  //           // code === "UNAUTHORIZED"
+  //           navigate("/sign-in", { replace: true });
+  //           toast.info("Sua sessão expirou")
+  //         } else {
+  //           throw error;
+  //         }
+  //       }
+  //     }
+  //   );
 
-    return () => {
-      api.interceptors.response.eject(interceptorId);
-    };
-  }, [navigate, token]);
+  //   return () => {
+  //     api.interceptors.response.eject(interceptorId);
+  //   };
+  // }, [navigate, token]);
 
   return (
     <section className="flex h-min-screen">
-      <div className="flex-none bg-secondary items-center">
+      {/* <div className="flex-none bg-secondary items-center">
         <h1 className="flex align-middle ml-2 mt-4 text-xl">
           <Box className="h-6 w-6 mt-1 mr-2" />
           BizEase
@@ -68,17 +70,24 @@ export function AppLayout() {
             <PackageSearch className="h-4 w-4 mt-1" />
             Categorias
           </NavLink>
+          <NavLink to="/dashboard" className="flex align-middle gap-2 ml-4">
+            <ChartColumn className="h-4 w-4 mt-1" />
+            Dashboards
+          </NavLink>
         </div>
-      </div>
-      <div className="antialised flex-1 min-h-screen h-full flex-col">
-        <Header />
-        <main className="flex flex-1 flex-col gap-4 p-8 pt-6">
-          <Outlet />
-        </main>
-        <p className="text-[0.75rem] absolute bottom-0 p-4">
-          &copy; - BizEase {new Date().getFullYear()}
-        </p>
-      </div>
+      </div> */}
+
+      <SidebarProvider>
+        <AppSidebar />
+
+        <div className="antialised flex-1 min-h-screen h-full flex-col">
+          <Header />
+          <main className="flex flex-1 flex-col gap-4 p-8 pt-6">
+            <Outlet />
+          </main>
+          
+        </div>
+      </SidebarProvider>
     </section>
   );
 }

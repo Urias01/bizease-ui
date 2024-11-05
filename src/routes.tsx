@@ -6,6 +6,7 @@ import { AppLayout } from "./pages/_layouts/_app-layout";
 import { Home } from "./pages/home";
 import { Products } from "./pages/products";
 import { Categories } from "./pages/categories";
+import { Dashboards } from "./pages/dashboards";
 
 
 
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
       { path: "", element: <Home /> },
       { path: "/products", element: <Products /> },
       { path: "/categories", element: <Categories /> },
+      { path: "/dashboard", element: <Dashboards /> },
     ],
   },
   {
