@@ -3,35 +3,29 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import {
+  BaggageClaim,
   Box,
   ChartColumn,
   Home,
   LogOutIcon,
   PackageOpen,
   PackageSearch,
+  Receipt,
+  ShoppingBag,
+  ShoppingCart,
 } from "lucide-react";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Separator } from "@radix-ui/react-separator";
 import { NavLink } from "react-router-dom";
 
 export function AppSidebar() {
-  const {
-    state,
-    open,
-    setOpen,
-    openMobile,
-    setOpenMobile,
-    isMobile,
-    toggleSidebar,
-  } = useSidebar();
+  const { state } = useSidebar();
 
-  console.log(state);
   return (
     <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader className="bg-secondary rounded-t-lg flex justify-middle">
@@ -45,7 +39,6 @@ export function AppSidebar() {
       <Separator orientation="horizontal" className="h-[2px]" />
 
       <SidebarContent className="bg-secondary">
-        
         <SidebarGroup>
           <SidebarGroupContent>
             <NavLink to="/" className="flex items-center space-x-2 mb-6">
@@ -58,7 +51,7 @@ export function AppSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Algum nome interessante</SidebarGroupLabel>
+          <SidebarGroupLabel>Estoque</SidebarGroupLabel>
           <SidebarGroupContent>
             <NavLink
               to="/products"
@@ -79,35 +72,44 @@ export function AppSidebar() {
               </span>
             </NavLink>
             <NavLink
+              to="/suppliers"
+              className="flex items-center space-x-2 mb-6"
+            >
+              <ShoppingBag className="h-4 w-4 mt-1" />
+              <span className={state === "collapsed" ? "hidden" : "block"}>
+                Fornecedor
+              </span>
+            </NavLink>
+            <NavLink
               to="/dashboard"
               className="flex items-center space-x-2 mb-6"
             >
-              <ChartColumn className="h-4 w-4 mt-1" />
+              <BaggageClaim className="h-4 w-4 mt-1" />
               <span className={state === "collapsed" ? "hidden" : "block"}>
-                Dashboards
+                Movimentação
               </span>
             </NavLink>
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>Algum nome interessante</SidebarGroupLabel>
+          <SidebarGroupLabel>Controles</SidebarGroupLabel>
           <SidebarGroupContent>
             <NavLink
-              to="/products"
+              to="/dashboard"
               className="flex items-center space-x-2 mb-6"
             >
-              <PackageOpen className="h-4 w-4 mt-1" />
+              <Receipt className="h-4 w-4 mt-1" />
               <span className={state === "collapsed" ? "hidden" : "block"}>
-                Produtos
+                Vendas
               </span>
             </NavLink>
             <NavLink
-              to="/categories"
+              to="/dashboard"
               className="flex items-center space-x-2 mb-6"
             >
-              <PackageSearch className="h-4 w-4 mt-1" />
+              <ShoppingCart className="h-4 w-4 mt-1" />
               <span className={state === "collapsed" ? "hidden" : "block"}>
-                Categorias
+                Compras
               </span>
             </NavLink>
             <NavLink
@@ -121,7 +123,6 @@ export function AppSidebar() {
             </NavLink>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup></SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="bg-secondary rounded-b-lg">
         <div className="flex items-center space-x-2 mb-6 bg-transparent cursor-pointer text-red-500 font-bold">

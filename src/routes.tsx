@@ -7,6 +7,7 @@ import { Home } from "./pages/home";
 import { Products } from "./pages/products";
 import { Categories } from "./pages/categories";
 import { Dashboards } from "./pages/dashboards";
+import Suppliers from "./pages/suppliers";
 
 
 
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { path: "", element: <Home /> },
       { path: "/products", element: <Products /> },
       { path: "/categories", element: <Categories /> },
+      { path: "/suppliers", element: <Suppliers /> },
       { path: "/dashboard", element: <Dashboards /> },
     ],
   },

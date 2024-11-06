@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Search } from "lucide-react";
 
-export function TableProductsSkeleton() {
+export function ProductSkeletonTable() {
   return Array.from({ length: 5 }).map((_, i) => {
     return (
       <TableRow key={i}>

@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TableCategoriesSkeleton } from "./TableCategoriesSkeleton";
+import { TableCategoriesSkeleton } from "./categories-skeleton-table";
 import { getCategories } from "@/api/categories/get-categories";
 import { z } from "zod";
 import { useSearchParams } from "react-router-dom";
