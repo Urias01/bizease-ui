@@ -46,6 +46,7 @@ export function SupplierTable() {
   });
 
   const handleEditClick = (_: string) => {
+    console.log(_)
     toast.info("Uuid não encontrado");
   };
 

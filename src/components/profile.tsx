@@ -1,64 +1,45 @@
-import { LogOut, User2, Users } from "lucide-react";
 import { Button } from "./ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { useNavigate } from "react-router-dom";
-import { Dialog, DialogTrigger } from "./ui/dialog";
-import { EditProfile } from "./edit-profile";
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
-interface ProfileProps {
-  user: {
-    name: string;
-    email: string;
-  };
-  commerce: {
-    name: string;
-  };
-}
-export function Profile({ user, commerce }: ProfileProps) {
-  const navigate = useNavigate();
-
+export function Profile() {
   return (
-    <Dialog>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant={"outline"}>
-            {user.name} -{" "}
-            {commerce.name.length > 10
-              ? commerce.name.substring(0, 8).concat("...")
-              : commerce.name}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuLabel>Email: {user.email}</DropdownMenuLabel>
-          <DropdownMenuLabel>Comércio: {commerce.name}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <DialogTrigger className="flex gap-2">
-              <User2 className="h-4 w-4" /> <p>Editar perfil</p>
-            </DialogTrigger>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="flex gap-2">
-            <Users className="h-4 w-4" /> <p>Editar funcionários</p>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="text-red-600 space-x-2 cursor-pointer"
-            onClick={() => {
-              localStorage.removeItem("token");
-              navigate("/sign-in", { replace: true });
-            }}
-          >
-            <LogOut className="h-4 w-4" /> <p>Sign out</p>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <EditProfile />
-    </Dialog>
+    <DialogContent className="sm:max-w-[425px]">
+      <DialogHeader>
+        <DialogTitle>Perfil da loja</DialogTitle>
+        <DialogDescription>
+          Atualize as informações do seu estabelecimento visíveis aos seus
+          clientes.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="grid gap-4 py-4">
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="name" className="text-right">
+            Name
+          </Label>
+          <Input id="name" defaultValue="Pedro Duarte" className="col-span-3" />
+        </div>
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="username" className="text-right">
+            Username
+          </Label>
+          <Input
+            id="username"
+            defaultValue="@peduarte"
+            className="col-span-3"
+          />
+        </div>
+      </div>
+      <DialogFooter>
+        <Button type="submit">Save changes</Button>
+      </DialogFooter>
+    </DialogContent>
   );
 }

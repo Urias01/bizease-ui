@@ -8,6 +8,7 @@ import { Products } from "./pages/products";
 import { Categories } from "./pages/categories";
 import { Dashboards } from "./pages/dashboards";
 import Suppliers from "./pages/suppliers";
+import { Employees } from "./pages/employees";
 
 
 
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
       { path: "/categories", element: <Categories /> },
       { path: "/suppliers", element: <Suppliers /> },
       { path: "/dashboard", element: <Dashboards /> },
+      { path: "/employees", element: <Employees /> },
     ],
   },
   {
