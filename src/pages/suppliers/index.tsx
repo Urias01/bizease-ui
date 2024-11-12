@@ -8,7 +8,7 @@ export default function Suppliers() {
   return (
     <>
       <header className="flex justify-between align-middle p-4">
-        <h1>Fornecedores</h1>
+        <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">Fornecedores</h1>
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline" className="flex gap-2">

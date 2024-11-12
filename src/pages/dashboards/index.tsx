@@ -7,7 +7,7 @@ import { InputLoss } from "./components/input-loss";
 export function Dashboards() {
   return (
     <>
-      <h1>Dashboard</h1>
+      <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">Dashboard</h1>
       <section className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-9 gap-4">
           <InputLoss />

@@ -9,8 +9,9 @@ import { Categories } from "./pages/categories";
 import { Dashboards } from "./pages/dashboards";
 import Suppliers from "./pages/suppliers";
 import { Employees } from "./pages/employees";
-
-
+import { Sales } from "./pages/sales";
+import { Purcharses } from "./pages/purcharses";
+import { Movements } from "./pages/movements";
 
 export const router = createBrowserRouter([
   {
@@ -21,8 +22,11 @@ export const router = createBrowserRouter([
       { path: "/products", element: <Products /> },
       { path: "/categories", element: <Categories /> },
       { path: "/suppliers", element: <Suppliers /> },
+      { path: "/movements", element: <Movements /> },
       { path: "/dashboard", element: <Dashboards /> },
       { path: "/employees", element: <Employees /> },
+      { path: "/sales", element: <Sales /> },
+      { path: "/purcharses", element: <Purcharses /> },
     ],
   },
   {
@@ -30,7 +34,7 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: "/sign-in", element: <SignIn /> },
-      { path: "/sign-up", element: <SignUp /> }
+      { path: "/sign-up", element: <SignUp /> },
     ],
   },
-])
+]);

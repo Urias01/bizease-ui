@@ -58,7 +58,7 @@ export function Home() {
 
   return (
     <>
-      <h1>BizEase Home</h1>
+      <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">BizEase Home</h1>
       <section className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">

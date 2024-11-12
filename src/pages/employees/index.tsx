@@ -9,7 +9,7 @@ export function Employees() {
   return (
     <>
       <header className="flex justify-between align-middle p-4">
-        <h1>Funcionários</h1>
+        <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">Funcionários</h1>
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline" className="flex gap-2">

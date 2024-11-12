@@ -81,7 +81,7 @@ export function AppSidebar() {
               </span>
             </NavLink>
             <NavLink
-              to="/dashboard"
+              to="/movements"
               className="flex items-center space-x-2 mb-6"
             >
               <BaggageClaim className="h-4 w-4 mt-1" />
@@ -95,7 +95,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Controles</SidebarGroupLabel>
           <SidebarGroupContent>
             <NavLink
-              to="/dashboard"
+              to="/sales"
               className="flex items-center space-x-2 mb-6"
             >
               <Receipt className="h-4 w-4 mt-1" />
@@ -104,7 +104,7 @@ export function AppSidebar() {
               </span>
             </NavLink>
             <NavLink
-              to="/dashboard"
+              to="/purcharses"
               className="flex items-center space-x-2 mb-6"
             >
               <ShoppingCart className="h-4 w-4 mt-1" />
