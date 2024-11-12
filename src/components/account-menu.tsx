@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Building, ChevronDown, LogOut } from "lucide-react";
+import { ChevronDown, LogOut, Store, UserPen, Users } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { StoreProfile } from "./store-profile";
@@ -14,7 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Skeleton } from "./ui/skeleton";
 
 const commerce = {
   name: "BizEase",
@@ -46,7 +45,7 @@ export function AccountMenu() {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="flex flex-col">
           <>
-            {profile?.name}
+            {profile?.name} - {commerce.name}
             <span className="text-xs font-normal text-muted-foreground">
               {profile?.email}
             </span>
@@ -62,7 +61,7 @@ export function AccountMenu() {
                   handleOpenDialog();
                 }}
               >
-                <Building className="mr-2 h-4 w-4" />
+                <UserPen className="mr-2 h-4 w-4" />
                 <span>Perfil</span>
               </DropdownMenuItem>
             </DialogTrigger>
@@ -71,7 +70,13 @@ export function AccountMenu() {
           </Dialog>
           <DropdownMenuItem asChild>
             <NavLink to="/employees">
-              <Building className="mr-2 h-4 w-4" />
+              <Store className="mr-2 h-4 w-4" />
+              <span>Comércio</span>
+            </NavLink>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <NavLink to="/employees">
+              <Users className="mr-2 h-4 w-4" />
               <span>Funcionários</span>
             </NavLink>
           </DropdownMenuItem>

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { PlusCircle } from "lucide-react";
 import { SupplierTable } from "./components/supplier-table";
+import { SuppliersTableFilters } from "./components/suppliers-table-filters";
 
 export default function Suppliers() {
   return (
@@ -18,7 +19,8 @@ export default function Suppliers() {
         </Dialog>
       </header>
 
-      <section>
+      <section className="space-y-4">
+        <SuppliersTableFilters />
         <SupplierTable />
       </section>
 

@@ -20,7 +20,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { format } from "date-fns";
+import { format, subDays } from "date-fns";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { useState } from "react";
+import { DateRange } from "react-day-picker";
 
 const COLOR_CLASSES = [
   "fill-sky-500",
@@ -47,6 +50,12 @@ export function Home() {
     { product: "Veja", amount: 43 },
     { product: "Limpa alumínio", amount: 12 },
   ];
+
+  const [period, setPeriod] = useState<DateRange | undefined>({
+    from: subDays(new Date(), 7),
+    to: new Date(),
+  });
+
   return (
     <>
       <h1>BizEase Home</h1>
@@ -152,6 +161,7 @@ export function Home() {
 
             <div className="flex items-center gap-3">
               <Label>Período</Label>
+              <DateRangePicker date={period} onDateChange={setPeriod} />
             </div>
           </CardHeader>
           <CardContent>

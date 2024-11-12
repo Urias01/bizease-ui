@@ -3,6 +3,7 @@ import { PlusCircle } from "lucide-react";
 import { ProductTable } from "./components/product-table";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { ProductForm } from "./components/product-form";
+import { ProductsTableFilters } from "./components/products-table-filters";
 
 export function Products() {
   return (
@@ -19,7 +20,8 @@ export function Products() {
         </Dialog>
       </header>
 
-      <section>
+      <section className="space-y-4">
+        <ProductsTableFilters />
         <ProductTable />
       </section>
 

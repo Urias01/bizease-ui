@@ -32,6 +32,12 @@ export function StoreProfile({ onClose }: StoreProfileProps) {
             </Label>
             <Input id="name" className="col-span-3" />
           </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="email" className="text-right">
+              E-mail
+            </Label>
+            <Input id="name" className="col-span-3" />
+          </div>
           <div className="grid grid-cols-4 items-baseline gap-4">
             <Label htmlFor="description" className="text-right">
               Descrição

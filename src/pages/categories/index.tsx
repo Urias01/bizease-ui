@@ -3,6 +3,7 @@ import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
 import { PlusCircle } from "lucide-react";
 import { CategoriesTable } from "./components/categories-table";
 import { CategoriesForm } from "./components/categories-form";
+import { CategoriesTableFilters } from "./components/categories-table-filters";
 
 export function Categories() {
   return (
@@ -19,7 +20,8 @@ export function Categories() {
         </Dialog>
       </header>
 
-      <section>
+      <section className="space-y-4 w-full">
+        <CategoriesTableFilters />
         <CategoriesTable />
       </section>
 

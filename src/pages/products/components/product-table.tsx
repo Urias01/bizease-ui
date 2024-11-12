@@ -2,9 +2,7 @@ import { getProducts } from "@/api/products/get-products";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -19,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { ProductForm } from "./product-form";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Pagination } from "@/components/pagination";
 
 export function ProductTable() {
   const [searchParams] = useSearchParams();
@@ -48,9 +47,9 @@ export function ProductTable() {
   const handleEditClick = (uuid: string) => {
     if (uuid !== "") {
       setSelectedProductUuid(uuid);
-      setIsDialogOpen(true); 
+      setIsDialogOpen(true);
     }
-    toast.info("Uuid não encontrado")
+    toast.info("Uuid não encontrado");
   };
 
   // function handlePaginate(pageIndex: number) {
@@ -63,76 +62,72 @@ export function ProductTable() {
 
   return (
     <>
-      <Table>
-        <TableCaption>Lista de Produtos</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>#</TableHead>
-            <TableHead>Id.</TableHead>
-            <TableHead>Nome</TableHead>
-            <TableHead>Quantidade</TableHead>
-            <TableHead>Categoria</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {isLoadingProduct && <ProductSkeletonTable />}
-          {result?.data?.length !== undefined && result?.data?.length > 0
-            ? result.data.map((product) => {
-                return (
-                  <TableRow key={product.id}>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>#</TableHead>
+              <TableHead>Id.</TableHead>
+              <TableHead>Nome</TableHead>
+              <TableHead>Quantidade</TableHead>
+              <TableHead>Categoria</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoadingProduct && <ProductSkeletonTable />}
+            {result?.data?.length !== undefined && result?.data?.length > 0
+              ? result.data.map((product) => {
+                  return (
+                    <TableRow key={product.id}>
+                      <TableCell>
+                        <Button
+                          variant="outline"
+                          className="flex gap-2"
+                          onClick={() =>
+                            handleEditClick(
+                              product.uuid !== undefined ? product.uuid : ""
+                            )
+                          }
+                        >
+                          <Pencil className="h-3 w-3" />
+                        </Button>
+                      </TableCell>
+                      <TableCell>{product.id}</TableCell>
+                      <TableCell>{product.name}</TableCell>
+                      <TableCell>{product.unit}</TableCell>
+                      <TableCell>
+                        {product.categories && product.categories.name}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              : isLoadingProduct !== true && (
+                  // <TableRow>
+                  //   <TableCell colSpan={5} className="text-center">
+                  //     Nenhum produto encontrado.
+                  //   </TableCell>
+                  // </TableRow>
+                  <TableRow>
                     <TableCell>
-                      <Button
-                        variant="outline"
-                        className="flex gap-2"
-                        onClick={() =>
-                          handleEditClick(
-                            product.uuid !== undefined ? product.uuid : ""
-                          )
-                        }
-                      >
-                        <Pencil className="h-3 w-3" />
-                      </Button>
-                    </TableCell>
-                    <TableCell>{product.id}</TableCell>
-                    <TableCell>{product.name}</TableCell>
-                    <TableCell>{product.unit}</TableCell>
-                    <TableCell>
-                      {product.categories && product.categories.name}
-                    </TableCell>
-                  </TableRow>
-                );
-              })
-            : isLoadingProduct !== true && (
-                // <TableRow>
-                //   <TableCell colSpan={5} className="text-center">
-                //     Nenhum produto encontrado.
-                //   </TableCell>
-                // </TableRow>
-                <TableRow>
-                    <TableCell>
-                      <Button
-                        variant="outline"
-                        className="flex gap-2"
-                      >
+                      <Button variant="outline" className="flex gap-2">
                         <Pencil className="h-3 w-3" />
                       </Button>
                     </TableCell>
                     <TableCell>1</TableCell>
                     <TableCell>Product</TableCell>
                     <TableCell>15</TableCell>
-                    <TableCell>
-                      Category
-                    </TableCell>
+                    <TableCell>Category</TableCell>
                   </TableRow>
-              )}
-        </TableBody>
-        <TableFooter>
-          <TableRow className="h-8">
-            <TableCell colSpan={4}></TableCell>
-            <TableCell className="text-right"></TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+                )}
+          </TableBody>
+        </Table>
+      </div>
+      <Pagination
+        pageIndex={0}
+        totalCount={10}
+        perPage={5}
+        onPageChange={() => {}}
+      />
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <ProductForm uuid={selectedProductUuid} />

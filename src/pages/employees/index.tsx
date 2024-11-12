@@ -3,6 +3,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { PlusCircle } from "lucide-react";
 import { EmployeesForm } from "./components/employees-form";
 import { EmployeesTable } from "./components/employees-table";
+import { EmployeesTableFilters } from "./components/employees-table-filters";
 
 export function Employees() {
   return (
@@ -19,7 +20,8 @@ export function Employees() {
         </Dialog>
       </header>
 
-      <section>
+      <section className="space-y-4">
+        <EmployeesTableFilters />
         <EmployeesTable />
       </section>
 
