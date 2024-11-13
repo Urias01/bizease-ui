@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,7 +12,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { DownloadIcon, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import {
   CartesianGrid,
   XAxis,
@@ -60,9 +59,6 @@ export function BuyingSellingMetrics() {
               Janeiro - Dezembro {new Date().getFullYear()}
             </CardDescription>
           </div>
-          <Button className="space-x-2 w-52">
-            <p>Exportar</p> <DownloadIcon className="h-4 w-4" />{" "}
-          </Button>
         </div>
       </CardHeader>
       <CardContent>

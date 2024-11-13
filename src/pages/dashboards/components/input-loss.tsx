@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -12,7 +11,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { DownloadIcon, TrendingUp } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import React from "react";
 import { Label, PieChart, Pie, Cell } from "recharts";
 
@@ -70,9 +69,6 @@ export function InputLoss() {
           <div>
             <CardTitle>Perca de insumos</CardTitle>
           </div>
-          <Button className="space-x-2 w-36">
-            <p>Exportar</p> <DownloadIcon className="h-4 w-4" />{" "}
-          </Button>
         </div>
       </CardHeader>
       <CardContent className="flex-1 pb-0">

@@ -18,9 +18,6 @@ export function Dashboards() {
         <Card>
           <CardHeader className="flex flex-row justify-between align-middle">
             <h2>Dashboard 3</h2>
-            <Button className="space-x-2 w-52">
-              <p>Exportar</p> <DownloadIcon className="h-4 w-4" />{" "}
-            </Button>
           </CardHeader>
           <CardContent>
             <h3>Dashboard Graph</h3>

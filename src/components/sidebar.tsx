@@ -94,10 +94,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Controles</SidebarGroupLabel>
           <SidebarGroupContent>
-            <NavLink
-              to="/sales"
-              className="flex items-center space-x-2 mb-6"
-            >
+            <NavLink to="/sales" className="flex items-center space-x-2 mb-6">
               <Receipt className="h-4 w-4 mt-1" />
               <span className={state === "collapsed" ? "hidden" : "block"}>
                 Vendas
@@ -119,6 +116,35 @@ export function AppSidebar() {
               <ChartColumn className="h-4 w-4 mt-1" />
               <span className={state === "collapsed" ? "hidden" : "block"}>
                 Dashboards
+              </span>
+            </NavLink>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Relatórios</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <NavLink to="/sales" className="flex items-center space-x-2 mb-6">
+              <Receipt className="h-4 w-4 mt-1" />
+              <span className={state === "collapsed" ? "hidden" : "block"}>
+                Produtos avariados
+              </span>
+            </NavLink>
+            <NavLink
+              to="/purcharses"
+              className="flex items-center space-x-2 mb-6"
+            >
+              <ShoppingCart className="h-4 w-4 mt-1" />
+              <span className={state === "collapsed" ? "hidden" : "block"}>
+                Produtos vencidos
+              </span>
+            </NavLink>
+            <NavLink
+              to="/dashboard"
+              className="flex items-center space-x-2 mb-6"
+            >
+              <ChartColumn className="h-4 w-4 mt-1" />
+              <span className={state === "collapsed" ? "hidden" : "block"}>
+                Produtos devolvidos
               </span>
             </NavLink>
           </SidebarGroupContent>
