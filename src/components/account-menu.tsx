@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-
+import { EditCommerce } from "./edit-commerce";
 const commerce = {
   name: "BizEase",
 };
@@ -26,10 +26,13 @@ const profile = {
 
 export function AccountMenu() {
   const navigate = useNavigate();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDialogProfileOpen, setIsDialogProfileOpen] = useState(false);
+  const [isDialogCommerceOpen, setIsDialogCommerceOpen] = useState(false);
 
-  const handleCloseDialog = () => setIsDialogOpen(false);
-  const handleOpenDialog = () => setIsDialogOpen(true);
+  const handleCloseDialogProfile = () => setIsDialogProfileOpen(false);
+  const handleOpenDialogProfile = () => setIsDialogProfileOpen(true);
+  const handleCloseDialogCommerce = () => isDialogCommerceOpen(false);
+  const handleOpenDialogCommerce = () => setIsDialogCommerceOpen(true);
 
   return (
     <DropdownMenu>
@@ -53,12 +56,15 @@ export function AccountMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <Dialog
+            open={isDialogProfileOpen}
+            onOpenChange={setIsDialogProfileOpen}
+          >
             <DialogTrigger asChild>
               <DropdownMenuItem
                 onClick={(e) => {
                   e.preventDefault();
-                  handleOpenDialog();
+                  handleOpenDialogProfile();
                 }}
               >
                 <UserPen className="mr-2 h-4 w-4" />
@@ -66,14 +72,22 @@ export function AccountMenu() {
               </DropdownMenuItem>
             </DialogTrigger>
 
-            <StoreProfile onClose={handleCloseDialog} />
+            <StoreProfile onClose={handleCloseDialogProfile} />
           </Dialog>
-          <DropdownMenuItem asChild>
-            <NavLink to="/employees">
-              <Store className="mr-2 h-4 w-4" />
-              <span>Comércio</span>
-            </NavLink>
-          </DropdownMenuItem>
+          <Dialog open={isDialogCommerceOpen} onOpenChange={setIsDialogCommerceOpen}>
+            <DialogTrigger asChild>
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleOpenDialogCommerce();
+                }}
+              >
+                <Store className="mr-2 h-4 w-4" />
+                <span>Comércio</span>
+              </DropdownMenuItem>
+            </DialogTrigger>
+            <EditCommerce onClose={handleCloseDialogCommerce} />
+          </Dialog>
           <DropdownMenuItem asChild>
             <NavLink to="/employees">
               <Users className="mr-2 h-4 w-4" />
