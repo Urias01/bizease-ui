@@ -40,6 +40,7 @@ export function PurcharsesTable() {
             <TableRow>
               <TableHead>#</TableHead>
               <TableHead>Id.</TableHead>
+              <TableHead>Produtos.</TableHead>
               <TableHead>Quantidade de produtos</TableHead>
               <TableHead>Status</TableHead>
               <TableHead></TableHead>
@@ -78,6 +79,7 @@ export function PurcharsesTable() {
                       </Button>
                     </TableCell>
                     <TableCell>1</TableCell>
+                    <TableCell>Alvejante, Detergente, Amaciante, Pasta para bri...</TableCell>
                     <TableCell>15</TableCell>
                     <TableCell>
                       {" "}
@@ -86,8 +88,9 @@ export function PurcharsesTable() {
                         A receber
                       </span>
                     </TableCell>
-                    <TableCell>
-                      <Button variant="outline">Receber pedido</Button>
+                    <TableCell className="space-x-4">
+                      <Button variant="outline">Receber</Button>
+                      <Button variant="destructive">Cancelar</Button>
                     </TableCell>
                   </TableRow>
                 )}

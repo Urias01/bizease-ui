@@ -40,7 +40,8 @@ export function SalesTable() {
             <TableRow>
               <TableHead>#</TableHead>
               <TableHead>Id.</TableHead>
-              <TableHead>Quantidade de produtos</TableHead>
+              <TableHead>Produtos</TableHead>
+              <TableHead>Quantidade</TableHead>
               <TableHead>Status</TableHead>
               <TableHead></TableHead>
             </TableRow>
@@ -78,16 +79,18 @@ export function SalesTable() {
                       </Button>
                     </TableCell>
                     <TableCell>1</TableCell>
+                    <TableCell>Alvejante, Detergente, Amaciante, Pasta para bri...</TableCell>
                     <TableCell>15</TableCell>
                     <TableCell>
                       {" "}
                       <span className="h-2 w-2 rounded-full bg-emerald-500" />
                       <span className="font-medium text-muted-foreground">
-                        Vendido
+                        Pendente
                       </span>
                     </TableCell>
-                    <TableCell>
-                      <Button variant="outline">Cancelar venda</Button>
+                    <TableCell className="space-x-4">
+                      <Button variant="outline">Confirmar</Button>
+                      <Button variant="destructive">Cancelar</Button>
                     </TableCell>
                   </TableRow>
                 )}

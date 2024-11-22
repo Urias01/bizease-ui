@@ -13,8 +13,10 @@ import {
   ChartColumn,
   Home,
   LogOutIcon,
+  Package2Icon,
   PackageOpen,
   PackageSearch,
+  PackageSearchIcon,
   Receipt,
   ShoppingBag,
   ShoppingCart,
@@ -123,17 +125,11 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Relatórios</SidebarGroupLabel>
           <SidebarGroupContent>
-            <NavLink to="/sales" className="flex items-center space-x-2 mb-6">
-              <Receipt className="h-4 w-4 mt-1" />
-              <span className={state === "collapsed" ? "hidden" : "block"}>
-                Produtos avariados
-              </span>
-            </NavLink>
             <NavLink
               to="/purcharses"
               className="flex items-center space-x-2 mb-6"
             >
-              <ShoppingCart className="h-4 w-4 mt-1" />
+              <PackageSearchIcon className="h-4 w-4 mt-1" />
               <span className={state === "collapsed" ? "hidden" : "block"}>
                 Produtos vencidos
               </span>
@@ -142,7 +138,7 @@ export function AppSidebar() {
               to="/dashboard"
               className="flex items-center space-x-2 mb-6"
             >
-              <ChartColumn className="h-4 w-4 mt-1" />
+              <Package2Icon className="h-4 w-4 mt-1" />
               <span className={state === "collapsed" ? "hidden" : "block"}>
                 Produtos devolvidos
               </span>

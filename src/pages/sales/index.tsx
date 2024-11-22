@@ -16,7 +16,7 @@ export function Sales() {
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline" className="flex gap-2">
-              <PlusCircle className="h-4 w-4" /> Produto
+              <PlusCircle className="h-4 w-4" /> Venda
             </Button>
           </DialogTrigger>
           <ProductForm />
