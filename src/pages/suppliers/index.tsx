@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@radix-ui/react-dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 import { PlusCircle } from "lucide-react";
 import { SupplierTable } from "./components/supplier-table";
 import { SuppliersTableFilters } from "./components/suppliers-table-filters";
+import { SupplierForm } from "./components/supplier-form";
 
 export default function Suppliers() {
   return (
@@ -15,7 +16,7 @@ export default function Suppliers() {
               <PlusCircle className="h-4 w-4" /> Fornecedor
             </Button>
           </DialogTrigger>
-          {/* <ProductForm /> */}
+          <SupplierForm />
         </Dialog>
       </header>
 
