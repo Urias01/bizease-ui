@@ -1,9 +1,9 @@
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { PlusCircle } from "lucide-react";
-import { ProductForm } from "../products/components/product-form";
-import { ProductTable } from "../products/components/product-table";
-import { ProductsTableFilters } from "../products/components/products-table-filters";
 import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
+import { MovementsForm } from "./components/movements-form";
+import { MovementsTable } from "./components/movements-table";
+import { MovementsTableFilter } from "./components/movements-table-filter";
 
 export function Movements() {
   
@@ -17,13 +17,13 @@ export function Movements() {
             <PlusCircle className="h-4 w-4" /> Movimentação
           </Button>
         </DialogTrigger>
-        <ProductForm />
+        <MovementsForm />
       </Dialog>
     </header>
 
     <section className="space-y-4">
-      <ProductsTableFilters />
-      <ProductTable />
+      <MovementsTableFilter />
+      <MovementsTable />
     </section>
 
     <footer></footer>
