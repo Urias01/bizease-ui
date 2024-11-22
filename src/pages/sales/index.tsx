@@ -1,7 +1,7 @@
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ProductForm } from "../products/components/product-form";
+import { SalesForm } from "./components/sales-form";
 import { SalesTable } from "./components/sales-table";
 import { SalesTableFilters } from "./components/sales-table-filtes";
 
@@ -19,7 +19,7 @@ export function Sales() {
               <PlusCircle className="h-4 w-4" /> Venda
             </Button>
           </DialogTrigger>
-          <ProductForm />
+          <SalesForm />
         </Dialog>
       </header>
 
