@@ -2,8 +2,8 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductForm } from "../products/components/product-form";
-import { ProductsTableFilters } from "../products/components/products-table-filters";
 import { PurcharsesTable } from "./components/purcharses-table";
+import { PurcharsesTableFilters } from "./components/purcharses-table-filter";
 
 export function Purcharses() {
   return (
@@ -16,7 +16,7 @@ export function Purcharses() {
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline" className="flex gap-2">
-              <PlusCircle className="h-4 w-4" /> Produto
+              <PlusCircle className="h-4 w-4" /> Compra
             </Button>
           </DialogTrigger>
           <ProductForm />
@@ -24,7 +24,7 @@ export function Purcharses() {
       </header>
 
       <section className="space-y-4">
-        <ProductsTableFilters />
+        <PurcharsesTableFilters />
         <PurcharsesTable />
       </section>
 
