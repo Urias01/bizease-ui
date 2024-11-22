@@ -12,6 +12,8 @@ import { Employees } from "./pages/employees";
 import { Sales } from "./pages/sales";
 import { Purcharses } from "./pages/purcharses";
 import { Movements } from "./pages/movements";
+import { ExpiredProducts } from "./pages/expired-products";
+import { ReturnedProducts } from "./pages/returned-products";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +29,8 @@ export const router = createBrowserRouter([
       { path: "/employees", element: <Employees /> },
       { path: "/sales", element: <Sales /> },
       { path: "/purcharses", element: <Purcharses /> },
+      { path: "/expired-products", element: <ExpiredProducts /> },
+      { path: "/returned-products", element: <ReturnedProducts /> },
     ],
   },
   {

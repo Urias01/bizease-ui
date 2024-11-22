@@ -126,7 +126,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Relatórios</SidebarGroupLabel>
           <SidebarGroupContent>
             <NavLink
-              to="/purcharses"
+              to="/expired-products"
               className="flex items-center space-x-2 mb-6"
             >
               <PackageSearchIcon className="h-4 w-4 mt-1" />
@@ -135,7 +135,7 @@ export function AppSidebar() {
               </span>
             </NavLink>
             <NavLink
-              to="/dashboard"
+              to="/returned-products"
               className="flex items-center space-x-2 mb-6"
             >
               <Package2Icon className="h-4 w-4 mt-1" />
