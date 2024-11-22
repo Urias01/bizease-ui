@@ -1,7 +1,7 @@
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ProductForm } from "../products/components/product-form";
+import { PurcharsesForm } from "./components/purcharses-form";
 import { PurcharsesTable } from "./components/purcharses-table";
 import { PurcharsesTableFilters } from "./components/purcharses-table-filter";
 
@@ -19,7 +19,7 @@ export function Purcharses() {
               <PlusCircle className="h-4 w-4" /> Compra
             </Button>
           </DialogTrigger>
-          <ProductForm />
+          <PurcharsesForm />
         </Dialog>
       </header>
 
