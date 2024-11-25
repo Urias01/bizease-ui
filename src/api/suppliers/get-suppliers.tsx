@@ -24,21 +24,24 @@ interface SupplierResponse {
   };
 }
 
-
 export async function getSuppliers({
   page,
   size,
   name,
   categorieId,
 }: GetSupplierQuery) {
-  const response = await api.get<SupplierResponse>("/products", {
-    params: {
-      page,
-      size,
-      name,
-      categorieId,
-    }
-  });
+  const response = await api
+    .get<SupplierResponse>("/products", {
+      params: {
+        page,
+        size,
+        name,
+        categorieId,
+      },
+    })
+    .catch((err) => {
+      return { data: err };
+    });
 
   return response.data;
 }
