@@ -2,11 +2,10 @@ import { Button } from "@/components/ui/button";
 import {
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Form } from "@/components/ui/form";
+import { Form, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -18,42 +17,39 @@ const supplierSchema = z.object({
   uuid: z.string().nullish(),
   cnpj: z.string(),
   name: z.string().min(1, "Nome é obrigatório"),
-  description: z.string().min(1, "Nome é obrigatório"),
   address: z.string(),
   address_number: z.string(),
   neighborhood: z.string(),
   city: z.string(),
   uf: z.string(),
   postalCode: z.string(),
-  category: z.string(),
   phoneNumber: z.string(),
   email: z.string(),
 });
 
 type SupplierSchema = z.infer<typeof supplierSchema>;
 
-interface SupplierForm {
+interface SupplierFormProps {
   uuid?: string;
 }
 
-export function SupplierForm({ uuid }: SupplierForm) {
+export function SupplierForm({ uuid }: SupplierFormProps) {
   const form = useForm<SupplierSchema>({
     resolver: zodResolver(supplierSchema),
+    mode: "onChange",
   });
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    reset,
+    formState: { isSubmitting },
   } = form;
 
   async function sendSupplierForm(data: SupplierSchema) {
-    data.uuid = uuid || "";
-    console.log(data);
-    alert(data);
+    console.log(data, uuid);
+    reset();
   }
-
-  console.log(isValid);
 
   return (
     <DialogContent className="min-w-fit">
@@ -67,92 +63,87 @@ export function SupplierForm({ uuid }: SupplierForm) {
       <Form {...form}>
         <form
           onSubmit={handleSubmit(sendSupplierForm)}
-          className="grid gap-4 py-4"
+          className="w-full space-y-4"
         >
-          <section className="grid grid-cols-12 gap-4">
-            <div className="col-span-6 gap-4">
-              <div className="space-y-4">
-                <Label htmlFor="name">Nome:</Label>
+          <div className="grid grid-cols-12 gap-4">
+            <div className="col-span-6">
+              <FormItem>
+                <Label htmlFor="name">Nome</Label>
+                <Input id="name" {...register("name", { required: true })} />
+                <FormMessage />
+              </FormItem>
+              <FormItem>
+                <Label htmlFor="cnpj">Cnpj</Label>
                 <Input
-                  className="col-span-5"
-                  id="name"
-                  {...(register("name"), { required: true })}
+                  id="cnpj"
+                  placeholder="00.000.000/0001-00"
+                  {...register("cnpj")}
                 />
-                {errors.name && (
-                  <span className="mt-2 text-red-500">
-                    {errors.name.message}
-                  </span>
-                )}
-              </div>
-              <div className="space-y-4">
-                <Label htmlFor="cnpj">Cnpj:</Label>
-                <Input className="col-span-5" id="cnpj" {...register("cnpj")} />
-              </div>
-              <div className="space-y-4">
-                <Label htmlFor="category">Categoria:</Label>
+                <FormMessage />
+              </FormItem>
+              <FormItem>
+                <Label htmlFor="email">E-mail</Label>
                 <Input
-                  className="col-span-5"
-                  id="category"
-                  {...register("category")}
+                  id="email"
+                  placeholder="fulano@example.com"
+                  {...register("email")}
                 />
-              </div>
+                <FormMessage />
+              </FormItem>
+              <FormItem>
+                <Label htmlFor="phoneNumber">Telefone</Label>
+                <Input
+                  id="phoneNumber"
+                  placeholder="(00) 9 0000-0000"
+                  {...register("phoneNumber")}
+                />
+                <FormMessage />
+              </FormItem>
             </div>
             <div className="col-span-6">
-              <div className="space-y-4">
-                <Label htmlFor="postalCode">CEP:</Label>
-                <Input
-                  className="col-span-5"
-                  id="postalCode"
-                  {...register("postalCode")}
-                />
-              </div>
-
+              <FormItem className="col-span-4">
+                <Label htmlFor="postalCode">CEP</Label>
+                <Input id="postalCode" {...register("postalCode")} />
+                <FormMessage />
+              </FormItem>
               <div className="grid grid-cols-6 gap-4">
-                <div className="space-y-2 col-span-4">
-                  <Label htmlFor="address">Endereço:</Label>
+                <FormItem className="col-span-4">
+                  <Label htmlFor="address">Endereço</Label>
                   <Input id="address" {...register("address")} />
-                </div>
-                <div className="space-y-2 col-span-2">
-                  <Label htmlFor="address_number">Número:</Label>
+                  <FormMessage />
+                </FormItem>
+                <FormItem className="col-span-2">
+                  <Label htmlFor="address_number">Número</Label>
                   <Input
                     id="address_number"
                     placeholder="Ex.. 52A"
                     {...register("address_number")}
                   />
-                </div>
+                  <FormMessage />
+                </FormItem>
               </div>
-
+              <FormItem className="col-span-4">
+                <Label htmlFor="neighborhood">Bairro</Label>
+                <Input id="neighborhood" {...register("neighborhood")} />
+                <FormMessage />
+              </FormItem>
               <div className="grid grid-cols-6 gap-4">
-                <div className="space-y-2 col-span-4">
-                  <Label htmlFor="city">Cidade:</Label>
+                <FormItem className="col-span-4">
+                  <Label htmlFor="city">Cidade</Label>
                   <Input id="city" {...register("city")} />
-                </div>
-                <div className="space-y-2 col-span-2">
-                  <Label htmlFor="uf">Estado:</Label>
+                  <FormMessage />
+                </FormItem>
+                <FormItem className="col-span-2">
+                  <Label htmlFor="uf">Estado</Label>
                   <Input id="uf" placeholder="Ex.. SP" {...register("uf")} />
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <Label htmlFor="neighborhood">Bairro:</Label>
-                <Input
-                  className="col-span-5"
-                  id="neighborhood"
-                  {...register("neighborhood")}
-                />
+                  <FormMessage />
+                </FormItem>
               </div>
             </div>
-          </section>
-
-          <Separator className="w-full" />
-          <DialogFooter>
-            <Button
-              className="disabled:opacity-75 disabled:cursor-not-allowed"
-              disabled={isValid}
-            >
-              Criar fornecedor
-            </Button>
-          </DialogFooter>
+          </div>
+          <Button type="submit" disabled={isSubmitting}>
+            Criar fornecedor
+          </Button>
         </form>
       </Form>
     </DialogContent>

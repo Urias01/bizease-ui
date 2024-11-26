@@ -1,3 +1,4 @@
+import { Categorie } from "@/@types/categorie";
 import { getSuppliers } from "@/api/suppliers/get-suppliers";
 import { Pagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
@@ -12,12 +13,19 @@ import {
 import { ProductSkeletonTable } from "@/pages/products/components/product-skeleton-table";
 import { formatPhoneNumber } from "@/utils/format-phone-number";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Pencil,
-} from "lucide-react";
+import { Pencil } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
+
+interface Supplier {
+  id?: number;
+  uuid?: string;
+  name: string;
+  phone: string;
+  categorieId: number;
+  categories?: Categorie;
+}
 
 export function SupplierTable() {
   const [searchParams] = useSearchParams();
@@ -30,7 +38,7 @@ export function SupplierTable() {
     .transform((page) => page - 1)
     .parse(searchParams.get("page") ?? "1");
 
-  const { data: result, isLoading: isLoadingProduct } = useQuery({
+  const { data: result, isLoading: isLoadingSupplier } = useQuery({
     queryKey: ["suppliers", page, name, categorieId],
     queryFn: () =>
       getSuppliers({
@@ -59,34 +67,34 @@ export function SupplierTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isLoadingProduct && <ProductSkeletonTable />}
+            {isLoadingSupplier && <ProductSkeletonTable />}
             {result?.data?.length !== undefined && result?.data?.length > 0
-              ? result.data.map((product) => {
+              ? result.data.map((supplier: Supplier) => {
                   return (
-                    <TableRow key={product.id}>
+                    <TableRow key={supplier.id}>
                       <TableCell>
                         <Button
                           variant="outline"
                           className="flex gap-2"
                           onClick={() =>
                             handleEditClick(
-                              product.uuid !== undefined ? product.uuid : ""
+                              supplier.uuid !== undefined ? supplier.uuid : ""
                             )
                           }
                         >
                           <Pencil className="h-3 w-3" />
                         </Button>
                       </TableCell>
-                      <TableCell>{product.id}</TableCell>
-                      <TableCell>{product.name}</TableCell>
-                      <TableCell>{formatPhoneNumber(product.phone)}</TableCell>
+                      <TableCell>{supplier.id}</TableCell>
+                      <TableCell>{supplier.name}</TableCell>
+                      <TableCell>{formatPhoneNumber(supplier.phone)}</TableCell>
                       <TableCell>
-                        {product.categories && product.categories.name}
+                        {supplier.categories && supplier.categories.name}
                       </TableCell>
                     </TableRow>
                   );
                 })
-              : isLoadingProduct !== true && (
+              : isLoadingSupplier !== true && (
                   // <TableRow>
                   //   <TableCell colSpan={5} className="text-center">
                   //     Nenhum produto encontrado.
