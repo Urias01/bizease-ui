@@ -34,6 +34,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Separator } from "@/components/ui/separator";
 
 const movementSchema = z.object({
   uuid: z.string(),
@@ -158,6 +159,7 @@ export function MovementsForm() {
               <FormMessage />
             </FormItem>
 
+            <Separator className="w-full" />
             <DialogFooter className="flex justify-end">
               <Button>Criar Movimentação</Button>
             </DialogFooter>

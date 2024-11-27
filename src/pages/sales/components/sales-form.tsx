@@ -1,7 +1,5 @@
-import { getCategories } from "@/api/categories/get-categories";
-import { createProduct } from "@/api/products/create-product";
-import { getProductByUuid } from "@/api/products/get-product-by-uuid";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   DialogContent,
   DialogDescription,
@@ -9,109 +7,74 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import { queryClient } from "@/lib/react-query";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
-import { toast } from "sonner";
 import { z } from "zod";
-
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { CalendarIcon } from "lucide-react";
 interface SalesFormProps {
   uuid?: string;
 }
 
+const salesSchema = z.object({
+  status: z.string(),
+  orderDate: z.coerce.date(),
+  deliveryDate: z.coerce.date(),
+  quantity: z.coerce.number(),
+  unitPrice: z
+    .string()
+    .regex(
+      /^\d+((,\d{2})|(\.\d{2}))?$/,
+      "O preço deve estar no formato 00,00 ou 00.00"
+    )
+    .transform((value) =>
+      value.includes(",")
+        ? parseFloat(value.replace(".", "").replace(",", "."))
+        : parseFloat(value)
+    ),
+  productUuid: z.string(),
+});
+
+type SalesSchame = z.infer<typeof salesSchema>;
+
 export function SalesForm({ uuid }: SalesFormProps) {
   const [searchParams] = useSearchParams();
 
-  const { data: product, refetch } = useQuery({
-    queryKey: ["product", uuid],
-    queryFn: () => {
-      if (uuid) {
-        return getProductByUuid({ uuid });
-      }
-    },
-    enabled: false,
-  });
-
-  const form = useForm({
-    resolver: zodResolver(),
+  const form = useForm<SalesSchame>({
+    resolver: zodResolver(salesSchema),
   });
 
   const { register, handleSubmit, reset } = form;
 
-  const { mutateAsync: createProductFn } = useMutation({
-    mutationFn: createProduct,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["products"],
-      });
-    },
-  });
-
-  const name = searchParams.get("name");
-
-  const page = z.coerce
-    .number()
-    .transform((page) => page - 1)
-    .parse(searchParams.get("page") ?? "1");
-
-  const { data: result } = useQuery({
-    queryKey: ["categories", page, name],
-    queryFn: () =>
-      getCategories({
-        page,
-        name,
-      }),
-  });
-
-  async function registerProduct(data: ProductSchema) {
-    await createProductFn(data)
-      .then(() => {
-        toast.success("Produto criado com sucesso");
-      })
-      .catch((error: unknown) => {
-        if (error instanceof Error) {
-          toast.error(error.message);
-        } else {
-          toast.error("Ocorreu um erro desconhecido");
-        }
-      });
-
+  async function registerSales(data: SalesSchame) {
+    console.log(data, uuid);
     reset();
   }
-
-  useEffect(() => {
-    if (uuid) {
-      refetch();
-    }
-
-    if (product) {
-      reset({
-        name: product.name,
-        unit: product.unit,
-        minimumStock: product.minimumStock,
-        categoryId: product.categoryId.toString(),
-        description: product.description,
-        location: product.location,
-      });
-    }
-  }, [product, refetch, reset, uuid]);
 
   return (
     <DialogContent>
@@ -124,84 +87,156 @@ export function SalesForm({ uuid }: SalesFormProps) {
       <Separator className="w-full" />
       <Form {...form}>
         <form
-          onSubmit={handleSubmit(registerProduct)}
+          onSubmit={handleSubmit(registerSales)}
           className="grid gap-4 py-4"
         >
-          <div className="grid grid-cols-5 items-center gap-4">
-            <Label htmlFor="name">Nome:</Label>
-            <Input className="col-span-5" id="name" {...register("name")} />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="unit">Quantidade:</Label>
-              <Input id="unit" {...register("unit")} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="minimumStock">
-                Quantidade mínima em estoque:
-              </Label>
-              <Input id="minimumStock" {...register("minimumStock")} />
-            </div>
-          </div>
           <FormField
             control={form.control}
-            name="categoryId"
+            name="status"
             render={({ field }) => (
               <FormItem>
-                <Label>Categoria</Label>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Label htmlFor="">Status</Label>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue>
-                        {result?.data?.find(
-                          (category) => category.id === field.value
-                        )?.name || "Selecione uma categoria"}
-                      </SelectValue>
+                      <SelectValue placeholder="Selecione o status da venda" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Categorias</SelectLabel>
-                      {result?.data?.length === 0 ? (
-                        <SelectLabel>Nenhuma categoria cadastrada</SelectLabel>
-                      ) : (
-                        result?.data?.length &&
-                        result.data.map((category) => {
-                          return (
-                            <SelectItem key={category.id} value={category.id}>
-                              {category.name}
-                            </SelectItem>
-                          );
-                        })
-                      )}
-                    </SelectGroup>
+                    <SelectItem value="112fasfa">Vendido</SelectItem>
+                    <SelectItem value="121rtrfas">Separado</SelectItem>
+                    <SelectItem value="112ff1rba">
+                      Em rota de entrega
+                    </SelectItem>
                   </SelectContent>
                 </Select>
+                <FormMessage />
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-5 items-center gap-4">
-            <Label htmlFor="location">Localização:</Label>
-            <Textarea
-              className="col-span-5"
-              {...register("location")}
-              placeholder="Onde seu produto esta localizado."
-              id="location"
-            />
+
+          <FormField
+            control={form.control}
+            name="deliveryDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <Label>Data de entrega</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "dd 'de' MMMM 'de' yyyy", {
+                            locale: ptBR,
+                          })
+                        ) : (
+                          <span>Escolha uma data</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="orderDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <Label>Data do pedido</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "dd 'de' MMMM 'de' yyyy", {
+                            locale: ptBR,
+                          })
+                        ) : (
+                          <span>Escolha uma data</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="productUuid"
+            render={({ field }) => (
+              <FormItem>
+                <Label>Produto</Label>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione um produto" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="asdad984as">Product 1</SelectItem>
+                    <SelectItem value="asdqw198dqw">Product 2</SelectItem>
+                    <SelectItem value="a4s9d4q9w1dqw">Product 3</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="grid grid-cols-6 gap-4">
+            <FormItem className="col-span-2">
+              <Label>Quantidade</Label>
+              <Input type="number" {...register("quantity")} />
+            </FormItem>
+            <FormItem className="col-span-4">
+              <Label>Preço unitário</Label>
+              <Input {...register("unitPrice")} />
+            </FormItem>
           </div>
-          <div className="grid grid-cols-5 items-center gap-4">
-            <Label htmlFor="description">Descrição:</Label>
-            <Textarea
-              className="col-span-5"
-              {...register("description")}
-              placeholder="Descreva seu produto aqui."
-              id="description"
-            />
-          </div>
+
           <Separator className="w-full" />
           <DialogFooter>
-            <Button type="submit">Criar produto</Button>
+            <Button type="submit">Cradastrar Venda</Button>
           </DialogFooter>
         </form>
       </Form>
