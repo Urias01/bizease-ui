@@ -14,6 +14,7 @@ import { Purcharses } from "./pages/purcharses";
 import { Movements } from "./pages/movements";
 import { ExpiredProducts } from "./pages/expired-products";
 import { ReturnedProducts } from "./pages/returned-products";
+import { ForgotPassword } from "./pages/auth/forgot-password";
 
 export const router = createBrowserRouter([
   {
@@ -39,6 +40,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "/sign-in", element: <SignIn /> },
       { path: "/sign-up", element: <SignUp /> },
+      { path: "/forgot-password", element: <ForgotPassword/> },
     ],
   },
 ]);

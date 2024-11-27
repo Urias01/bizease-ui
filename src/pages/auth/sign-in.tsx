@@ -96,7 +96,9 @@ export function SignIn() {
                   {errors.password.message}
                 </span>
               )}
-              <p className="text-xs text-end underline cursor-pointer">
+              <p
+                className="text-xs text-end underline cursor-pointer"
+                onClick={() => navigate("/forgot-password")}>
                 Esqueceu sua senha?
               </p>
             </div>
