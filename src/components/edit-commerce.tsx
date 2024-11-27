@@ -88,7 +88,7 @@ export function EditCommerce({ onClose }: EditCommerceProps) {
             </div>
           </div>
         </div>
-        <DialogFooter>
+        <DialogFooter className="space-y-4 sm:space-y-0">
           <DialogClose asChild>
             <Button variant="ghost" type="button" onClick={onClose}>
               Cancelar
