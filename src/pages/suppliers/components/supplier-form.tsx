@@ -5,12 +5,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Form, FormItem, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Input, InputProps } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import InputMask from "react-input-mask";
 import { z } from "zod";
 
 const supplierSchema = z.object({
@@ -73,11 +74,22 @@ export function SupplierForm({ uuid }: SupplierFormProps) {
                 <FormMessage />
               </FormItem>
               <FormItem>
-                <Label htmlFor="cnpj">Cnpj</Label>
-                <Input
-                  id="cnpj"
-                  placeholder="00.000.000/0001-00"
-                  {...register("cnpj")}
+                <Label htmlFor="cnpj">CNPJ</Label>
+                <FormField
+                  name="cnpj"
+                  control={form.control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <InputMask {...field} mask="99.999.999/9999-99">
+                      {(inputProps: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>) => (
+                        <Input
+                          id="cnpj"
+                          {...inputProps}
+                          className="col-span-3"
+                        />
+                      )}
+                    </InputMask>
+                  )}
                 />
                 <FormMessage />
               </FormItem>
@@ -92,10 +104,21 @@ export function SupplierForm({ uuid }: SupplierFormProps) {
               </FormItem>
               <FormItem>
                 <Label htmlFor="phoneNumber">Telefone</Label>
-                <Input
-                  id="phoneNumber"
-                  placeholder="(00) 9 0000-0000"
-                  {...register("phoneNumber")}
+                <FormField
+                  name="phoneNumber"
+                  control={form.control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <InputMask {...field} mask="(99) 99999-9999">
+                      {(inputProps: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>) => (
+                        <Input
+                          id="phone"
+                          {...inputProps}
+                          className="col-span-3"
+                        />
+                      )}
+                    </InputMask>
+                  )}
                 />
                 <FormMessage />
               </FormItem>
@@ -103,7 +126,22 @@ export function SupplierForm({ uuid }: SupplierFormProps) {
             <div className="col-span-6">
               <FormItem className="col-span-4">
                 <Label htmlFor="postalCode">CEP</Label>
-                <Input id="postalCode" {...register("postalCode")} />
+                <FormField
+                  name="postalCode"
+                  control={form.control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <InputMask {...field} mask="99999-999">
+                      {(inputProps: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>) => (
+                        <Input
+                          id="postalCode"
+                          {...inputProps}
+                          className="col-span-3"
+                        />
+                      )}
+                    </InputMask>
+                  )}
+                />
                 <FormMessage />
               </FormItem>
               <div className="grid grid-cols-6 gap-4">

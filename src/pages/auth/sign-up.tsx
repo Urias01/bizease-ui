@@ -1,11 +1,13 @@
 import { createFirstAccess } from "@/api/user/create-first-access";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { FormField } from "@/components/ui/form";
+import { Input, InputProps } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "@radix-ui/react-label";
 import { useMutation } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
+import InputMask from "react-input-mask";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -23,13 +25,15 @@ type SignUpForm = z.infer<typeof signUpForm>;
 export function SignUp() {
   const navigate = useNavigate()
 
+  const form = useForm<SignUpForm>({
+    resolver: zodResolver(signUpForm),
+  });
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpForm>({
-    resolver: zodResolver(signUpForm),
-  });
+  } = form
 
   const { mutateAsync: createFirstAccessFn } = useMutation({
     mutationFn: createFirstAccess
@@ -46,7 +50,7 @@ export function SignUp() {
         commerceName: data.commerceName
       })
 
-      toast.success('Restaurante cadastrado com sucesso!', {
+      toast.success('Usuário e comércio cadastrado com sucesso!', {
         action: {
           label: 'Login',
           onClick: () => navigate(`/sign-in?email=${data.email}`),
@@ -114,13 +118,23 @@ export function SignUp() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="cnpj">Cnpj do seu comércio</Label>
-              <Input
-                id="cnpj"
-                type="text"
-                className="bg-secondary border-none"
-                {...register("cnpj")}
-              />
+              <Label htmlFor="cnpj">CNPJ do seu comércio</Label>
+              <FormField
+                  name="cnpj"
+                  control={form.control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <InputMask {...field} mask="99.999.999/9999-99">
+                      {(inputProps: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>) => (
+                        <Input
+                          id="cnpj"
+                          {...inputProps}
+                          className="col-span-3 bg-secondary"
+                        />
+                      )}
+                    </InputMask>
+                  )}
+                />
               {errors.cnpj && (
                 <span className="mt-2 text-red-500">
                   {errors.cnpj.message}

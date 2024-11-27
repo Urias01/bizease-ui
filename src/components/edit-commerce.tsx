@@ -27,8 +27,7 @@ export function EditCommerce({ onClose }: EditCommerceProps) {
       <DialogHeader>
         <DialogTitle>Edite seu comércio</DialogTitle>
         <DialogDescription>
-          Aqui você pode editar os seus dados cadastrais e/ou resetar a sua
-          senha
+          Aqui você pode editar os dados cadastrais do seu comércio.
         </DialogDescription>
       </DialogHeader>
       <Separator className="w-full" />
@@ -38,7 +37,7 @@ export function EditCommerce({ onClose }: EditCommerceProps) {
             <div className="grid-cols-6 col-span-6">
               <FormItem>
                 <Label htmlFor="email" className="text-right">
-                  Cnpj
+                  CNPJ
                 </Label>
                 <FormField
                   name="cnpj"
@@ -64,18 +63,48 @@ export function EditCommerce({ onClose }: EditCommerceProps) {
                 <Input id="name" className="col-span-3" />
               </FormItem>
               <FormItem>
-                <Label htmlFor="name" className="text-right">
+                <Label htmlFor="phone" className="text-right">
                   Telefone
                 </Label>
-                <Input id="name" className="col-span-3" />
+                <FormField
+                  name="phone"
+                  control={form.control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <InputMask {...field} mask="(99) 99999-9999">
+                      {(inputProps: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>) => (
+                        <Input
+                          id="phone"
+                          {...inputProps}
+                          className="col-span-3"
+                        />
+                      )}
+                    </InputMask>
+                  )}
+                />
               </FormItem>
             </div>
             <div className="grid-cols-6 col-span-6">
               <FormItem className="">
-                <Label htmlFor="name" className="text-right">
+                <Label htmlFor="cep" className="text-right">
                   CEP
                 </Label>
-                <Input id="name" className="col-span-3" />
+                <FormField
+                  name="cep"
+                  control={form.control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <InputMask {...field} mask="99999-999">
+                      {(inputProps: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>) => (
+                        <Input
+                          id="cep"
+                          {...inputProps}
+                          className="col-span-3"
+                        />
+                      )}
+                    </InputMask>
+                  )}
+                />
               </FormItem>
               <div className="grid grid-cols-6 gap-4">
                 <FormItem className="col-span-4">
@@ -89,10 +118,10 @@ export function EditCommerce({ onClose }: EditCommerceProps) {
               </div>
               <div className="grid grid-cols-6 gap-4">
                 <FormItem className="col-span-4">
-                  <Label htmlFor="name" className="text-right">
+                  <Label htmlFor="city" className="text-right">
                     Cidade
                   </Label>
-                  <Input id="name" className="col-span-3" />
+                  <Input id="city" className="col-span-3" />
                 </FormItem>
                 <FormItem className="col-span-2">
                   <Label htmlFor="uf">UF</Label>
@@ -101,10 +130,10 @@ export function EditCommerce({ onClose }: EditCommerceProps) {
               </div>
               <div className=""></div>
               <div className="">
-                <Label htmlFor="name" className="text-right">
+                <Label htmlFor="neighborhood" className="text-right">
                   Bairro
                 </Label>
-                <Input id="name" className="col-span-3" />
+                <Input id="neighborhood" className="col-span-3" />
               </div>
             </div>
           </div>
