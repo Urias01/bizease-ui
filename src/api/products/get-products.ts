@@ -41,6 +41,5 @@ export async function getProducts({
     }
   });
 
-  console.log(response.data)
   return response.data;
 }

@@ -15,14 +15,8 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { EditCommerce } from "./edit-commerce";
-const commerce = {
-  name: "BizEase",
-};
-
-const profile = {
-  name: "John Doe",
-  email: "john.doe@example.com",
-};
+import { useQuery } from "@tanstack/react-query";
+import { getMe } from "@/api/user/get-me";
 
 export function AccountMenu() {
   const navigate = useNavigate();
@@ -34,6 +28,11 @@ export function AccountMenu() {
   const handleCloseDialogCommerce = () => setIsDialogCommerceOpen(false);
   const handleOpenDialogCommerce = () => setIsDialogCommerceOpen(true);
 
+  const { data: me } = useQuery({
+    queryKey: ["me"],
+    queryFn: async () => await getMe(),
+  });
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -41,16 +40,16 @@ export function AccountMenu() {
           variant="outline"
           className="flex select-none items-center gap-2"
         >
-          {commerce.name}
+          {me?.commerce.name}
           <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="flex flex-col">
           <>
-            {profile?.name} - {commerce.name}
+            {me?.name} - {me?.commerce.name}
             <span className="text-xs font-normal text-muted-foreground">
-              {profile?.email}
+              {me?.email}
             </span>
           </>
         </DropdownMenuLabel>

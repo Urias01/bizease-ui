@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import {
   DialogContent,
@@ -10,6 +10,9 @@ import {
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { ChangePasswordModal } from "./change-password-modal";
+import { useForm } from "react-hook-form";
+import { getMe } from "@/api/user/get-me";
+import { useQuery } from "@tanstack/react-query";
 
 type StoreProfileProps = {
   onClose: () => void;
@@ -18,6 +21,10 @@ type StoreProfileProps = {
 export function StoreProfile({ onClose }: StoreProfileProps) {
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
+  const form = useForm({});
+
+  const { register, setValue } = form;
+
   const handleOpenChangePassword = () => {
     setIsChangePasswordOpen(true);
   };
@@ -25,6 +32,18 @@ export function StoreProfile({ onClose }: StoreProfileProps) {
   const handleCloseChangePassword = () => {
     setIsChangePasswordOpen(false);
   };
+
+  const { data: me } = useQuery({
+    queryKey: ["me"],
+    queryFn: async () => await getMe(),
+  });
+
+  useEffect(() => {
+    if (me) {
+      setValue("name", me.name);
+      setValue("email", me.email);
+    }
+  }, [me, setValue]);
 
   return (
     <>
@@ -41,13 +60,18 @@ export function StoreProfile({ onClose }: StoreProfileProps) {
               <Label htmlFor="name" className="text-right">
                 Nome
               </Label>
-              <Input id="name" className="col-span-3" />
+              <Input id="name" className="col-span-3" {...register("name")} />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right">
                 E-mail
               </Label>
-              <Input id="name" className="col-span-3" />
+              <Input
+                id="email"
+                type="email"
+                className="col-span-3"
+                {...register("email")}
+              />
             </div>
           </div>
           <DialogFooter>

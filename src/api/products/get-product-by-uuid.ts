@@ -21,6 +21,5 @@ interface GetProductByUuidResponse {
 export async function getProductByUuid({ uuid }: GetProductByUuidParams) {
   const response = await api.get<GetProductByUuidResponse>(`/products/${uuid}`);
 
-  console.log(response.data)
   return response.data;
 }
