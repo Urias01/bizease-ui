@@ -27,6 +27,7 @@ import { DateRange } from "react-day-picker";
 import { Helmet } from "react-helmet-async";
 import { useQuery } from "@tanstack/react-query";
 import { getPopularProducts } from "@/api/products/get-popular-products";
+import { getMe } from "@/api/user/get-me";
 
 const COLOR_CLASSES = [
   "fill-sky-500",
@@ -51,6 +52,11 @@ export function Home() {
     to: new Date(),
   });
 
+  const { data: me } = useQuery({
+    queryKey: ["me"],
+    queryFn: async () => await getMe(),
+  });
+
   const { data: popularProducts } = useQuery({
     queryKey: ["popular-products"],
     queryFn: () => getPopularProducts(),
@@ -60,7 +66,7 @@ export function Home() {
     <>
       <Helmet title="Home" />
       <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">
-        BizEase Home
+        {me && me.commerce.name} Home
       </h1>
       <section className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>

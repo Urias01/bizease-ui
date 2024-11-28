@@ -103,7 +103,7 @@ export function AccountMenu() {
             <button
               className="w-full"
               onClick={() => {
-                localStorage.getItem("token");
+                localStorage.removeItem("token");
                 navigate("/sign-in", { replace: true });
               }}
             >

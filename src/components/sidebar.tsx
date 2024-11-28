@@ -23,9 +23,11 @@ import {
 } from "lucide-react";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Separator } from "@radix-ui/react-separator";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export function AppSidebar() {
+  const navigate = useNavigate();
+
   const { state } = useSidebar();
 
   return (
@@ -151,7 +153,10 @@ export function AppSidebar() {
           <LogOutIcon className="h-4 w-4" />
           <span
             className={state === "collapsed" ? "hidden" : "block"}
-            onClick={() => localStorage.getItem("token")}
+            onClick={() => {
+              localStorage.removeItem("token");
+              navigate("/sign-in", { replace: true });
+            }}
           >
             Sair
           </span>
