@@ -18,3 +18,19 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response && error.response.status === 401) {
+
+      window.location.href = "/sign-in";
+
+      localStorage.removeItem("token");
+    }
+
+    return Promise.reject(error);
+  }
+);

@@ -31,7 +31,7 @@ export function AccountMenu() {
 
   const handleCloseDialogProfile = () => setIsDialogProfileOpen(false);
   const handleOpenDialogProfile = () => setIsDialogProfileOpen(true);
-  const handleCloseDialogCommerce = () => isDialogCommerceOpen(false);
+  const handleCloseDialogCommerce = () => setIsDialogCommerceOpen(false);
   const handleOpenDialogCommerce = () => setIsDialogCommerceOpen(true);
 
   return (
@@ -74,7 +74,10 @@ export function AccountMenu() {
 
             <StoreProfile onClose={handleCloseDialogProfile} />
           </Dialog>
-          <Dialog open={isDialogCommerceOpen} onOpenChange={setIsDialogCommerceOpen}>
+          <Dialog
+            open={isDialogCommerceOpen}
+            onOpenChange={setIsDialogCommerceOpen}
+          >
             <DialogTrigger asChild>
               <DropdownMenuItem
                 onClick={(e) => {
@@ -100,7 +103,10 @@ export function AccountMenu() {
           >
             <button
               className="w-full"
-              onClick={() => navigate("/sign-in", { replace: true })}
+              onClick={() => {
+                localStorage.getItem("token");
+                navigate("/sign-in", { replace: true });
+              }}
             >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Sair</span>

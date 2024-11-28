@@ -4,6 +4,7 @@ export interface getCategoriesQuery {
   page?: number | null;
   size?: number | null;
   name?: string | null;
+  id?: string | null;
 }
 
 interface CategoriesResponse {
@@ -12,24 +13,25 @@ interface CategoriesResponse {
     uuid: string,
     name: string,
     description: string,
+    isActive: "ACTIVE" | "INACTIVE"
   }[];
-  meta: {
-    pageIndex: number;
-    perPage: number;
-    totalCount: number;
-  };
+  pageIndex: number;
+  perPage: number;
+  totalCount: number;
 }
 
 export async function getCategories({
   page,
-  size = 10,
+  size = 5,
   name,
+  id,
 }: getCategoriesQuery) {
   const response = await api.get<CategoriesResponse>("/categories", {
     params: {
       page,
       size,
       name,
+      id
     }
   });
   return response.data;

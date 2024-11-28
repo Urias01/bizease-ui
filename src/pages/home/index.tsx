@@ -216,7 +216,7 @@ export function Home() {
             </div>
           </CardHeader>
           <CardContent>
-            {popularProducts && Array.isArray(popularProducts.data) ? (
+            {popularProducts && popularProducts.data.length > 0 ? (
               <ResponsiveContainer width="100%" height={240}>
                 <PieChart style={{ fontSize: 12 }}>
                   <Pie

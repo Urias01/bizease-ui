@@ -45,7 +45,7 @@ export function CategoriesForm() {
   async function registerCategorie(data: CategorieSchema) {
     await createCategorieFn(data)
       .then(() => {
-        toast.success("Produto criado com sucesso");
+        toast.success("Categoria criada com sucesso");
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {

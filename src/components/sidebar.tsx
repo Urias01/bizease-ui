@@ -149,7 +149,10 @@ export function AppSidebar() {
       <SidebarFooter className="bg-secondary rounded-b-lg">
         <div className="flex items-center space-x-2 mb-6 bg-transparent cursor-pointer text-red-500 font-bold">
           <LogOutIcon className="h-4 w-4" />
-          <span className={state === "collapsed" ? "hidden" : "block"}>
+          <span
+            className={state === "collapsed" ? "hidden" : "block"}
+            onClick={() => localStorage.getItem("token")}
+          >
             Sair
           </span>
         </div>
