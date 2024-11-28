@@ -20,14 +20,15 @@ import { toast } from "sonner";
 import { Pagination } from "@/components/pagination";
 
 export function ProductTable() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedProductUuid, setSelectedProductUuid] = useState<
     string | undefined
   >(undefined); // Estado para o UUID do produto
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const categorieId = searchParams.get("categorieId");
+  const id = searchParams.get("id");
   const name = searchParams.get("name");
+  const isActive = searchParams.get("isActive");
 
   const page = z.coerce
     .number()
@@ -35,12 +36,13 @@ export function ProductTable() {
     .parse(searchParams.get("page") ?? "1");
 
   const { data: result, isLoading: isLoadingProduct } = useQuery({
-    queryKey: ["products", page, name, categorieId],
+    queryKey: ["products", page, name, id, isActive],
     queryFn: () =>
       getProducts({
         page,
         name,
-        categorieId,
+        id,
+        isActive,
       }),
   });
 
@@ -52,13 +54,12 @@ export function ProductTable() {
     toast.info("Uuid não encontrado");
   };
 
-  // function handlePaginate(pageIndex: number) {
-  //   setSearchParams((state) => {
-  //     state.set("page", (pageIndex + 1).toString());
-
-  //     return state;
-  //   });
-  // }
+  function handlePaginate(pageIndex: number) {
+    setSearchParams((state) => {
+      state.set("page", (pageIndex + 1).toString());
+      return state;
+    });
+  }
 
   return (
     <>
@@ -111,12 +112,14 @@ export function ProductTable() {
           </TableBody>
         </Table>
       </div>
-      <Pagination
-        pageIndex={0}
-        totalCount={10}
-        perPage={5}
-        onPageChange={() => {}}
-      />
+      {result && (
+        <Pagination
+          pageIndex={result.pageIndex}
+          totalCount={result.totalCount}
+          perPage={result.perPage}
+          onPageChange={handlePaginate}
+        />
+      )}
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <ProductForm uuid={selectedProductUuid} />

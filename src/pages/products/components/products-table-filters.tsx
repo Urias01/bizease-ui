@@ -12,101 +12,114 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-// const ordersFiltersSchema = z.object({
-//   orderId: z.string().optional(),
-//   customerName: z.string().optional(),
-//   status: z.string().optional(),
-// })
+const productsFiltersSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().optional(),
+  isActive: z.string().optional(),
+});
 
-// type OrderFiltersSchema = z.infer<typeof ordersFiltersSchema>
+type ProductsFiltersSchema = z.infer<typeof productsFiltersSchema>;
 
 export function ProductsTableFilters() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // const orderId = searchParams.get('orderId')
-  // const customerName = searchParams.get('customerName')
-  const status = searchParams.get("status");
+  const id = searchParams.get("id");
+  const name = searchParams.get("name");
+  const isActive = searchParams.get("status");
 
-  const { register, handleSubmit, reset, control } = useForm({
-    defaultValues: {
-      status: status || "all",
-    },
-  });
+  const { register, handleSubmit, reset, control } =
+    useForm<ProductsFiltersSchema>({
+      resolver: zodResolver(productsFiltersSchema),
+      defaultValues: {
+        id: id || "",
+        name: name || "",
+        isActive: isActive || "",
+      },
+    });
 
-  // function handleFilter(data: OrderFiltersSchema) {
-  //   const orderId = data.orderId?.toString()
-  //   const customerName = data.customerName?.toString()
-  //   const status = data.status?.toString()
+  function handleFilter(data: ProductsFiltersSchema) {
+    const id = data.id?.toString();
+    const name = data.name?.toString();
+    const isActive = data.isActive?.toString();
 
-  //   setSearchParams((prev) => {
-  //     if (orderId) {
-  //       prev.set('orderId', orderId)
-  //     } else {
-  //       prev.delete('orderId')
-  //     }
+    setSearchParams((prev) => {
+      if (id) {
+        prev.set("id", id);
+      } else {
+        prev.delete("id");
+      }
 
-  //     if (customerName) {
-  //       prev.set('customerName', customerName)
-  //     } else {
-  //       prev.delete('customerName')
-  //     }
+      if (name) {
+        prev.set("name", name);
+      } else {
+        prev.delete("name");
+      }
 
-  //     if (status) {
-  //       prev.set('status', status)
-  //     } else {
-  //       prev.delete('status')
-  //     }
+      if (isActive) {
+        prev.set("isActive", isActive);
+      } else {
+        prev.delete("isActive");
+      }
 
-  //     prev.set('page', '1')
+      prev.set("page", "1");
 
-  //     return prev
-  //   })
-  // }
+      return prev;
+    });
+  }
 
-  // function handleClearFilters() {
-  //   setSearchParams((prev) => {
-  //     prev.delete('orderId')
-  //     prev.delete('customerName')
-  //     prev.delete('status')
-  //     prev.set('page', '1')
+  function handleClearFilters() {
+    setSearchParams((prev) => {
+      prev.delete("id");
+      prev.delete("name");
+      prev.delete("isActive");
+      prev.set("page", "1");
 
-  //     return prev
-  //   })
+      return prev;
+    });
 
-  //   reset({
-  //     orderId: '',
-  //     customerName: '',
-  //     status: 'all',
-  //   })
-  // }
-
-  // const hasAnyFilter = !!orderId || !!customerName || !!status
+    reset({
+      id: "",
+      name: "",
+      isActive: "",
+    });
+  }
 
   return (
-    <form className="flex flex-col md:flex-row items-start gap-2">
+    <form
+      onSubmit={handleSubmit(handleFilter)}
+      className="flex flex-col md:flex-row items-start gap-2"
+    >
       <span className="text-sm font-semibold">Filtros:</span>
       <div className="flex flex-wrap md:flex-row items-center gap-2 flex-1">
-        <Input placeholder="ID do produto" className="h-8 w-full md:w-1/3" />
-        <Input placeholder="Nome do produto" className="h-8 w-full md:w-1/3" />
+        <Input
+          placeholder="ID do produto"
+          className="h-8 w-full md:w-1/3"
+          {...register("id")}
+        />
+        <Input
+          placeholder="Nome do produto"
+          className="h-8 w-full md:w-1/3"
+          {...register("name")}
+        />
         <Controller
           control={control}
-          name="status"
+          name="isActive"
           render={({ field: { name, onChange, value, disabled } }) => {
             return (
               <Select
                 name={name}
                 onValueChange={onChange}
-                value={value}
+                defaultValue={value}
                 disabled={disabled}
               >
                 <SelectTrigger className="h-8 w-full md:w-1/4">
-                  <SelectValue />
+                  <SelectValue placeholder="Selecione um status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos status</SelectItem>
-                  <SelectItem value="pending">Ativo</SelectItem>
-                  <SelectItem value="canceled">Inativo</SelectItem>
+                  <SelectItem value="ACTIVE">Ativo</SelectItem>
+                  <SelectItem value="INACTIVE">Inativo</SelectItem>
                 </SelectContent>
               </Select>
             );
@@ -118,7 +131,12 @@ export function ProductsTableFilters() {
           <Search className="mr-2 h-4 w-4" />
           Filtrar resultados
         </Button>
-        <Button type="button" variant="outline" size="xs">
+        <Button
+          type="button"
+          variant="outline"
+          size="xs"
+          onClick={handleClearFilters}
+        >
           <X className="mr-2 h-4 w-4" />
           Remover filtros
         </Button>
