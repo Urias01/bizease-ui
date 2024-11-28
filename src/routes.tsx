@@ -15,11 +15,17 @@ import { Movements } from "./pages/movements";
 import { ExpiredProducts } from "./pages/expired-products";
 import { ReturnedProducts } from "./pages/returned-products";
 import { ForgotPassword } from "./pages/auth/forgot-password";
+import { ProtectedRoute } from "./components/auth/protected-route";
+import { PublicRoute } from "./components/auth/public-route";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <AppLayout />,
+    element: (
+      <ProtectedRoute>
+        <AppLayout />,
+      </ProtectedRoute>
+    ),
     children: [
       { path: "", element: <Home /> },
       { path: "/products", element: <Products /> },
@@ -36,11 +42,15 @@ export const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <AuthLayout />,
+    element: (
+      <PublicRoute>
+        <AuthLayout />
+      </PublicRoute>
+    ),
     children: [
       { path: "/sign-in", element: <SignIn /> },
       { path: "/sign-up", element: <SignUp /> },
-      { path: "/forgot-password", element: <ForgotPassword/> },
+      { path: "/forgot-password", element: <ForgotPassword /> },
     ],
   },
 ]);

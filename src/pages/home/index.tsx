@@ -24,6 +24,7 @@ import { format, subDays } from "date-fns";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
+import { Helmet } from "react-helmet-async";
 
 const COLOR_CLASSES = [
   "fill-sky-500",
@@ -58,7 +59,10 @@ export function Home() {
 
   return (
     <>
-      <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">BizEase Home</h1>
+      <Helmet title="Home" />
+      <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">
+        BizEase Home
+      </h1>
       <section className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
