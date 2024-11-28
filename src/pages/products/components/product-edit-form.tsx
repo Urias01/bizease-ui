@@ -1,5 +1,6 @@
 import { getCategories } from "@/api/categories/get-categories";
-import { createProduct } from "@/api/products/create-product";
+import { getProductByUuid } from "@/api/products/get-product-by-uuid";
+import { updateProduct } from "@/api/products/update-product";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -30,10 +31,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { queryClient } from "@/lib/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
+
+interface ProductFormProps {
+  uuid: string;
+  open?: boolean;
+}
 
 const productSchema = z.object({
   name: z.string().min(2, "O campo nome é obrigatório o preenchimento"),
@@ -46,17 +53,27 @@ const productSchema = z.object({
 
 type ProductSchema = z.infer<typeof productSchema>;
 
-export function ProductForm() {
+export function ProductEditForm({ uuid, open }: ProductFormProps) {
   const [searchParams] = useSearchParams();
+
+  const { data: product } = useQuery({
+    queryKey: ["product", uuid],
+    queryFn: () => {
+      if (uuid) {
+        return getProductByUuid({ uuid });
+      }
+    },
+    enabled: open,
+  });
 
   const form = useForm<ProductSchema>({
     resolver: zodResolver(productSchema),
   });
 
-  const { register, handleSubmit, reset } = form;
+  const { register, handleSubmit, setValue } = form;
 
-  const { mutateAsync: createProductFn } = useMutation({
-    mutationFn: createProduct,
+  const { mutateAsync: updateProductFn } = useMutation({
+    mutationFn: updateProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["products"],
@@ -80,10 +97,28 @@ export function ProductForm() {
       }),
   });
 
+  useEffect(() => {
+    if (product) {
+      setValue("name", product.name);
+      setValue("unit", product.unit);
+      setValue("minimumStock", product.minimumStock);
+      setValue("description", product.description);
+      setValue("location", product.location);
+      setValue("categoryUuid", product.categoryUuid);
+    }
+  }, [product, setValue]);
+
   async function registerProduct(data: ProductSchema) {
-    await createProductFn(data)
+    await updateProductFn({
+      uuid,
+      name: data.name,
+      unit: data.unit,
+      minimumStock: data.minimumStock,
+      categoryUuid: data.categoryUuid,
+      description: data.description,
+    })
       .then(() => {
-        toast.success("Produto criado com sucesso");
+        toast.success("Produto atualizado com sucesso");
       })
       .catch((error: unknown) => {
         if (error instanceof Error) {
@@ -92,8 +127,6 @@ export function ProductForm() {
           toast.error("Ocorreu um erro desconhecido");
         }
       });
-
-    reset();
   }
 
   return (
@@ -179,7 +212,7 @@ export function ProductForm() {
           </div>
           <Separator className="w-full" />
           <DialogFooter>
-            <Button type="submit">Criar produto</Button>
+            <Button type="submit">Editar produto</Button>
           </DialogFooter>
         </form>
       </Form>

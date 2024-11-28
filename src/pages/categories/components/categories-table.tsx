@@ -24,8 +24,8 @@ export function CategoriesTable() {
   const [selectedCategoryUuid, setSelectedCategoryUuid] = useState<string>("");
 
   const handleCategorySelect = (categoryUuid: string) => {
-    setSelectedCategoryUuid(categoryUuid); // Atualiza o uuid da categoria selecionada
-    setIsCategoryDetailsOpen(true); // Abre o diálogo
+    setSelectedCategoryUuid(categoryUuid);
+    setIsCategoryDetailsOpen(true);
   };
 
   const categoriesId = searchParams.get("categoriesId");

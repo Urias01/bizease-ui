@@ -12,19 +12,17 @@ import { useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { ProductSkeletonTable } from "./product-skeleton-table";
 import { Pencil } from "lucide-react";
-import { Dialog } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { ProductForm } from "./product-form";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
-import { toast } from "sonner";
 import { Pagination } from "@/components/pagination";
+import { ProductEditForm } from "./product-edit-form";
 
 export function ProductTable() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedProductUuid, setSelectedProductUuid] = useState<
-    string | undefined
-  >(undefined); // Estado para o UUID do produto
+  const [isProductDetailsOpen, setIsProductDetailsOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const [selectedProductUuid, setSelectedProductUuid] = useState<string>("");
 
   const id = searchParams.get("id");
   const name = searchParams.get("name");
@@ -46,20 +44,17 @@ export function ProductTable() {
       }),
   });
 
-  const handleEditClick = (uuid: string) => {
-    if (uuid !== "") {
-      setSelectedProductUuid(uuid);
-      setIsDialogOpen(true);
-    }
-    toast.info("Uuid não encontrado");
-  };
-
   function handlePaginate(pageIndex: number) {
     setSearchParams((state) => {
       state.set("page", (pageIndex + 1).toString());
       return state;
     });
   }
+
+  const handlProductSelect = (productUuid: string) => {
+    setSelectedProductUuid(productUuid);
+    setIsProductDetailsOpen(true);
+  };
 
   return (
     <>
@@ -81,17 +76,24 @@ export function ProductTable() {
                   return (
                     <TableRow key={product.id}>
                       <TableCell>
-                        <Button
-                          variant="outline"
-                          className="flex gap-2"
-                          onClick={() =>
-                            handleEditClick(
-                              product.uuid !== undefined ? product.uuid : ""
-                            )
+                        <Dialog
+                          open={
+                            isProductDetailsOpen &&
+                            selectedProductUuid === product.uuid
                           }
+                          onOpenChange={setIsProductDetailsOpen}
                         >
-                          <Pencil className="h-3 w-3" />
-                        </Button>
+                          <DialogTrigger asChild>
+                            <Pencil
+                              className="h-3 w-3 cursor-pointer"
+                              onClick={() => handlProductSelect(product.uuid)}
+                            />
+                          </DialogTrigger>
+                          <ProductEditForm
+                            uuid={selectedProductUuid}
+                            open={isProductDetailsOpen}
+                          />
+                        </Dialog>
                       </TableCell>
                       <TableCell>{product.id}</TableCell>
                       <TableCell>{product.name}</TableCell>
@@ -122,7 +124,7 @@ export function ProductTable() {
       )}
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <ProductForm uuid={selectedProductUuid} />
+        <ProductEditForm uuid={selectedProductUuid} />
       </Dialog>
     </>
   );

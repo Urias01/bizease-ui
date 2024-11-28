@@ -12,7 +12,7 @@ export interface GetProductsQuery {
 interface ProductsResponse {
   data: {
     id?: number;
-    uuid?: string;
+    uuid: string;
     name: string;
     unit: number;
     price: number;
