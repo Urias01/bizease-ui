@@ -26,6 +26,8 @@ import {
   Pie,
   Cell,
 } from "recharts";
+import { useQuery } from "@tanstack/react-query";
+import { getPopularProducts } from "@/api/products/get-popular-products";
 
 const COLOR_CLASSES = [
   "fill-sky-500",
@@ -45,13 +47,10 @@ export function Dashboards() {
     { date: format(new Date(), "MM/dd/yyyy"), receipt: 58 },
   ];
 
-  const popularProducts = [
-    { product: "Detergente", amount: 30 },
-    { product: "Amaciante", amount: 25 },
-    { product: "Pasta para brilho", amount: 18 },
-    { product: "Veja", amount: 43 },
-    { product: "Limpa alumínio", amount: 12 },
-  ];
+  const { data: popularProducts } = useQuery({
+    queryKey: ["popular-products"],
+    queryFn: () => getPopularProducts(),
+  });
 
   const [period, setPeriod] = useState<DateRange | undefined>({
     from: subDays(new Date(), 7),
@@ -134,11 +133,11 @@ export function Dashboards() {
             </div>
           </CardHeader>
           <CardContent>
-            {popularProducts ? (
+            {popularProducts && Array.isArray(popularProducts.data) ? (
               <ResponsiveContainer width="100%" height={240}>
                 <PieChart style={{ fontSize: 12 }}>
                   <Pie
-                    data={popularProducts}
+                    data={popularProducts.data}
                     dataKey="amount"
                     nameKey="product"
                     cx="50%"
@@ -170,17 +169,17 @@ export function Dashboards() {
                           textAnchor={x > cx ? "start" : "end"}
                           dominantBaseline="central"
                         >
-                          {popularProducts[index].product.length > 12
-                            ? popularProducts[index].product
+                          {popularProducts.data[index].product.length > 12
+                            ? popularProducts.data[index].product
                                 .substring(0, 12)
                                 .concat("...")
-                            : popularProducts[index].product}{" "}
+                            : popularProducts.data[index].product}{" "}
                           ({value})
                         </text>
                       );
                     }}
                   >
-                    {popularProducts.map((_, index) => {
+                    {popularProducts.data.map((_, index) => {
                       return (
                         <Cell
                           key={`cell-${index}`}
