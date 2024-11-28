@@ -9,13 +9,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectLabel,
   SelectTrigger,
@@ -40,7 +45,7 @@ const productSchema = z.object({
   name: z.string().min(2, "O campo nome é obrigatório o preenchimento"),
   unit: z.coerce.number(),
   minimumStock: z.coerce.number(),
-  categoryId: z.string(),
+  categoryUuid: z.string(),
   description: z.string(),
   location: z.string(),
 });
@@ -117,7 +122,7 @@ export function ProductForm({ uuid }: ProductFormProps) {
         name: product.name,
         unit: product.unit,
         minimumStock: product.minimumStock,
-        categoryId: product.categoryId.toString(),
+        categoryUuid: product.categoryUuid.toString(),
         description: product.description,
         location: product.location,
       });
@@ -158,38 +163,32 @@ export function ProductForm({ uuid }: ProductFormProps) {
           </div>
           <FormField
             control={form.control}
-            name="categoryId"
+            name="categoryUuid"
             render={({ field }) => (
               <FormItem>
-                <Label>Categoria</Label>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Label htmlFor="categoryUuid">Categoria</Label>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue>
-                        {result?.data?.find(
-                          (category) => category.id === field.value
-                        )?.name || "Selecione uma categoria"}
-                      </SelectValue>
+                      <SelectValue placeholder="Selecione uma categoria" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Categorias</SelectLabel>
-                      {result?.data?.length === 0 ? (
-                        <SelectLabel>Nenhuma categoria cadastrada</SelectLabel>
-                      ) : (
-                        result?.data?.length &&
-                        result.data.map((category) => {
-                          return (
-                            <SelectItem key={category.id} value={category.id}>
-                              {category.name}
-                            </SelectItem>
-                          );
-                        })
-                      )}
-                    </SelectGroup>
+                    {result && result.data.length > 0 ? (
+                      result.data.map((category) => (
+                        <SelectItem key={category.id} value={category.uuid}>
+                          {category.name}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <SelectLabel> Nenhuma categoria encontrada</SelectLabel>
+                    )}
                   </SelectContent>
                 </Select>
+                <FormMessage />
               </FormItem>
             )}
           />

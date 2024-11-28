@@ -15,7 +15,7 @@ interface GetProductByUuidResponse {
     expirationDate: string
     description: string
     commerceUuid: string
-    categoryId: number
+    categoryUuid: number
 }
 
 export async function getProductByUuid({ uuid }: GetProductByUuidParams) {
