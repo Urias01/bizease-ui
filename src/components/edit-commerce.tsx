@@ -9,18 +9,60 @@ import {
 
 import { Separator } from "./ui/separator";
 import { Label } from "./ui/label";
-import { Input, InputProps } from "./ui/input";
+import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Form, FormField, FormItem } from "./ui/form";
 import { useForm } from "react-hook-form";
 import InputMask from "react-input-mask";
+import { useMutation, UseMutationResult, useQuery } from "@tanstack/react-query";
+import { getCommerceDetails } from "@/api/commerces/get-commerce-details";
+import { useEffect } from "react";
+import { updateCommerce } from "@/api/commerces/update-commerce";
+import { UpdateCommerceRequest } from "@/api/commerces/update-commerce";
+import { toast } from "sonner";
 
 interface EditCommerceProps {
   onClose: () => void;
 }
 
 export function EditCommerce({ onClose }: EditCommerceProps) {
-  const form = useForm({});
+  const form = useForm();
+
+  const { register, handleSubmit, setValue } = form;
+
+  const { data: commerceDetails } = useQuery({
+    queryKey: ["commerceDetails"],
+    queryFn: async () => await getCommerceDetails(),
+  });
+
+  useEffect(() => {
+    if (commerceDetails) {
+      setValue("cnpj", commerceDetails.cnpj);
+      setValue("name", commerceDetails.name);
+      setValue("phoneNumber", commerceDetails.phoneNumber);
+      setValue("postalCode", commerceDetails.postalCode);
+      setValue("address", commerceDetails.address);
+      setValue("addressNumber", commerceDetails.addressNumber);
+      setValue("city", commerceDetails.city);
+      setValue("uf", commerceDetails.uf);
+      setValue("neighborhood", commerceDetails.neighborhood);
+    }
+  }, [commerceDetails, setValue]);
+
+  const mutation: UseMutationResult<void, Error, UpdateCommerceRequest> = useMutation({
+    mutationFn: updateCommerce,
+    onSuccess: () => {
+      toast.success("Dados do comércio atualizados com sucesso!");
+      onClose();
+    },
+    onError: () => {
+      toast.error("Erro ao atualizar os dados do comércio.");
+    },
+  });
+
+  const onSubmit = (data: any) => {
+    mutation.mutate(data);
+  };
 
   return (
     <DialogContent className="min-w-fit">
@@ -32,25 +74,20 @@ export function EditCommerce({ onClose }: EditCommerceProps) {
       </DialogHeader>
       <Separator className="w-full" />
       <Form {...form}>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-12 gap-4 py-4">
             <div className="grid-cols-6 col-span-6">
               <FormItem>
-                <Label htmlFor="email" className="text-right">
+                <Label htmlFor="cnpj" className="text-right">
                   CNPJ
                 </Label>
                 <FormField
                   name="cnpj"
                   control={form.control}
-                  defaultValue=""
                   render={({ field }) => (
                     <InputMask {...field} mask="99.999.999/9999-99">
-                      {(inputProps: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>) => (
-                        <Input
-                          id="cnpj"
-                          {...inputProps}
-                          className="col-span-3"
-                        />
+                      {(inputProps) => (
+                        <Input id="cnpj" {...inputProps} className="col-span-3" />
                       )}
                     </InputMask>
                   )}
@@ -60,24 +97,19 @@ export function EditCommerce({ onClose }: EditCommerceProps) {
                 <Label htmlFor="name" className="text-right">
                   Nome
                 </Label>
-                <Input id="name" className="col-span-3" />
+                <Input id="name" {...register('name')} className="col-span-3" />
               </FormItem>
               <FormItem>
-                <Label htmlFor="phone" className="text-right">
+                <Label htmlFor="phoneNumber" className="text-right">
                   Telefone
                 </Label>
                 <FormField
-                  name="phone"
+                  name="phoneNumber"
                   control={form.control}
-                  defaultValue=""
                   render={({ field }) => (
                     <InputMask {...field} mask="(99) 99999-9999">
-                      {(inputProps: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>) => (
-                        <Input
-                          id="phone"
-                          {...inputProps}
-                          className="col-span-3"
-                        />
+                      {(inputProps) => (
+                        <Input id="phoneNumber" {...inputProps} className="col-span-3" />
                       )}
                     </InputMask>
                   )}
@@ -85,22 +117,17 @@ export function EditCommerce({ onClose }: EditCommerceProps) {
               </FormItem>
             </div>
             <div className="grid-cols-6 col-span-6">
-              <FormItem className="">
-                <Label htmlFor="cep" className="text-right">
+              <FormItem>
+                <Label htmlFor="postalCode" className="text-right">
                   CEP
                 </Label>
                 <FormField
-                  name="cep"
+                  name="postalCode"
                   control={form.control}
-                  defaultValue=""
                   render={({ field }) => (
                     <InputMask {...field} mask="99999-999">
-                      {(inputProps: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>) => (
-                        <Input
-                          id="cep"
-                          {...inputProps}
-                          className="col-span-3"
-                        />
+                      {(inputProps) => (
+                        <Input id="postalCode" {...inputProps} className="col-span-3" />
                       )}
                     </InputMask>
                   )}
@@ -109,11 +136,11 @@ export function EditCommerce({ onClose }: EditCommerceProps) {
               <div className="grid grid-cols-6 gap-4">
                 <FormItem className="col-span-4">
                   <Label htmlFor="address">Endereço</Label>
-                  <Input id="address" />
+                  <Input id="address" {...register('address')} />
                 </FormItem>
                 <FormItem className="col-span-2">
-                  <Label htmlFor="address_number">Número</Label>
-                  <Input id="address_number" placeholder="Ex.. 52A" />
+                  <Label htmlFor="addressNumber">Número</Label>
+                  <Input id="addressNumber" {...register('addressNumber')} />
                 </FormItem>
               </div>
               <div className="grid grid-cols-6 gap-4">
@@ -121,20 +148,19 @@ export function EditCommerce({ onClose }: EditCommerceProps) {
                   <Label htmlFor="city" className="text-right">
                     Cidade
                   </Label>
-                  <Input id="city" className="col-span-3" />
+                  <Input id="city" {...register('city')} className="col-span-3" />
                 </FormItem>
                 <FormItem className="col-span-2">
                   <Label htmlFor="uf">UF</Label>
-                  <Input id="uf" placeholder="Ex.. SP" />
+                  <Input id="uf" {...register('uf')} placeholder="Ex.. SP" />
                 </FormItem>
               </div>
-              <div className=""></div>
-              <div className="">
+              <FormItem>
                 <Label htmlFor="neighborhood" className="text-right">
                   Bairro
                 </Label>
-                <Input id="neighborhood" className="col-span-3" />
-              </div>
+                <Input id="neighborhood" {...register('neighborhood')} className="col-span-3" />
+              </FormItem>
             </div>
           </div>
           <DialogFooter className="space-y-4 sm:space-y-0">
