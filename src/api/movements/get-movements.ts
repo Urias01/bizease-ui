@@ -15,6 +15,7 @@ interface GetMovementsResponse {
     type: string,
     origin: string,
     productId: number,
+    destination: string,
     product: {
       id: number,
       uuid: string,

@@ -23,6 +23,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
 } from "@/components/ui/select";
 import {
   Popover,
@@ -38,10 +39,16 @@ import { ptBR } from "date-fns/locale";
 import { Separator } from "@/components/ui/separator";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/api/products/get-products";
-import { SelectGroup } from "@radix-ui/react-select";
-import { createMovement } from "@/api/movements/create-movement";
 import { queryClient } from "@/lib/react-query";
 import { Textarea } from "@/components/ui/textarea";
+import { getMovementsByUuid } from "@/api/movements/get-movements-by-uuid";
+import { useEffect } from "react";
+import { updateMovement } from "@/api/movements/update-movement";
+
+interface MovementsEditFormProps {
+  uuid: string;
+  open: boolean;
+}
 
 const movementSchema = z.object({
   observation: z.string().min(1, "O nome para a movimentação é obrigatório"),
@@ -57,15 +64,15 @@ const movementSchema = z.object({
 
 type MovementSchema = z.infer<typeof movementSchema>;
 
-export function MovementsForm() {
+export function MovementsEditForm({ uuid, open }: MovementsEditFormProps) {
   const form = useForm<MovementSchema>({
     resolver: zodResolver(movementSchema),
   });
 
-  const { handleSubmit, reset, register } = form;
+  const { handleSubmit, reset, register, setValue } = form;
 
-  const { mutateAsync: createMovementFn } = useMutation({
-    mutationFn: createMovement,
+  const { mutateAsync: updateMovementFn } = useMutation({
+    mutationFn: updateMovement,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["movements"],
@@ -74,9 +81,18 @@ export function MovementsForm() {
   });
 
   async function sendMovementForm(data: MovementSchema) {
-    createMovementFn(data);
+    updateMovementFn({ uuid, ...data });
     reset();
   }
+
+  const { data: result } = useQuery({
+    queryKey: ["movement", uuid],
+    queryFn: () =>
+      getMovementsByUuid({
+        uuid,
+      }),
+    enabled: open,
+  });
 
   const { data: products } = useQuery({
     queryKey: ["products-to-select"],
@@ -86,6 +102,18 @@ export function MovementsForm() {
         size: 999,
       }),
   });
+
+  useEffect(() => {
+    if (result) {
+      setValue("productUuid", result.product.uuid);
+      setValue("origin", result.origin);
+      setValue("destination", result.destination);
+      setValue("type", result.type);
+      setValue("movementDate", new Date(result.movementDate));
+      setValue("quantity", result.quantity);
+      setValue("observation", result.observation);
+    }
+  }, [result, setValue]);
 
   return (
     <DialogContent className="min-w-fit">
@@ -239,7 +267,7 @@ export function MovementsForm() {
 
             <Separator className="w-full" />
             <DialogFooter className="flex justify-end">
-              <Button type="submit">Criar Movimentação</Button>
+              <Button type="submit">Editar Movimentação</Button>
             </DialogFooter>
           </form>
         </Form>

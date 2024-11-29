@@ -12,12 +12,17 @@ import { useQuery } from "@tanstack/react-query";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "react-router-dom";
-import { toast } from "sonner";
 import { z } from "zod";
 import { getMovements } from "@/api/movements/get-movements";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { useState } from "react";
+import { MovementsEditForm } from "./movements-edit-form";
 
 export function MovementsTable() {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const [isMovementDetailsOpen, setIsMovementDetailsOpen] = useState(false);
+  const [selectedMovementUuid, setSelectedMovementUuid] = useState<string>("");
 
   const id = searchParams.get("id");
   const type = searchParams.get("type");
@@ -33,17 +38,17 @@ export function MovementsTable() {
     queryFn: () => getMovements({ page, id, type, origin }),
   });
 
-  const handleEditClick = (_: string) => {
-    console.log(_);
-    toast.info("Uuid não encontrado");
-  };
-
   function handlePaginate(pageIndex: number) {
     setSearchParams((state) => {
       state.set("page", (pageIndex + 1).toString());
       return state;
     });
   }
+
+  const handlMovementSelect = (movementUuid: string) => {
+    setSelectedMovementUuid(movementUuid);
+    setIsMovementDetailsOpen(true);
+  };
 
   return (
     <>
@@ -65,22 +70,31 @@ export function MovementsTable() {
                   return (
                     <TableRow key={movement.id}>
                       <TableCell>
-                        <Button
-                          variant="outline"
-                          className="flex gap-2"
-                          onClick={() =>
-                            handleEditClick(
-                              movement.uuid !== undefined ? movement.uuid : ""
-                            )
+                        <Dialog
+                          open={
+                            isMovementDetailsOpen &&
+                            selectedMovementUuid === movement.uuid
                           }
+                          onOpenChange={setIsMovementDetailsOpen}
                         >
-                          <Pencil className="h-3 w-3" />
-                        </Button>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              onClick={() => handlMovementSelect(movement.uuid)}
+                            >
+                              <Pencil className="h-3 w-3 cursor-pointer" />
+                            </Button>
+                          </DialogTrigger>
+                          <MovementsEditForm
+                            uuid={selectedMovementUuid}
+                            open={isMovementDetailsOpen}
+                          />
+                        </Dialog>
                       </TableCell>
                       <TableCell>{movement.id}</TableCell>
                       <TableCell>{movement.product.name}</TableCell>
                       <TableCell>{movement.type}</TableCell>
-                      <TableCell>{movement.origin}</TableCell>
+                      <TableCell>{movement.destination}</TableCell>
                     </TableRow>
                   );
                 })
