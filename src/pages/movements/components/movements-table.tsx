@@ -14,12 +14,13 @@ import { Button } from "@/components/ui/button";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { z } from "zod";
+import { getMovements } from "@/api/movements/get-movements";
 
 export function MovementsTable() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const categorieId = searchParams.get("categorieId");
-  const name = searchParams.get("name");
+  const id = searchParams.get("id");
+  const type = searchParams.get("type");
 
   const page = z.coerce
     .number()
@@ -27,23 +28,21 @@ export function MovementsTable() {
     .parse(searchParams.get("page") ?? "1");
 
   const { data: result, isLoading: isLoadingProduct } = useQuery({
-    queryKey: ["movements", page, name, categorieId],
-    queryFn: () => {
-      return {
-        data: [] as {
-          id: string;
-          uuid: string;
-          product: string;
-          type: string;
-        }[],
-      };
-    },
+    queryKey: ["movements", page, id],
+    queryFn: () => getMovements({ page, id, type }),
   });
 
   const handleEditClick = (_: string) => {
     console.log(_);
     toast.info("Uuid não encontrado");
   };
+
+  function handlePaginate(pageIndex: number) {
+    setSearchParams((state) => {
+      state.set("page", (pageIndex + 1).toString());
+      return state;
+    });
+  }
 
   return (
     <>
@@ -77,42 +76,31 @@ export function MovementsTable() {
                           <Pencil className="h-3 w-3" />
                         </Button>
                       </TableCell>
-                      <TableCell>{movement.uuid}</TableCell>
-                      <TableCell>{movement.product}</TableCell>
+                      <TableCell>{movement.id}</TableCell>
+                      <TableCell>{movement.product.name}</TableCell>
                       <TableCell>{movement.type}</TableCell>
-                      <TableCell>
-                        {movement.product && movement.product}
-                      </TableCell>
+                      <TableCell>{movement.origin}</TableCell>
                     </TableRow>
                   );
                 })
               : isLoadingProduct !== true && (
-                  // <TableRow>
-                  //   <TableCell colSpan={5} className="text-center">
-                  //     Nenhum produto encontrado.
-                  //   </TableCell>
-                  // </TableRow>
                   <TableRow>
-                    <TableCell>
-                      <Button variant="outline" className="flex gap-2">
-                        <Pencil className="h-3 w-3" />
-                      </Button>
+                    <TableCell colSpan={5} className="text-center">
+                      Nenhum produto encontrado.
                     </TableCell>
-                    <TableCell>1</TableCell>
-                    <TableCell>Movimentação</TableCell>
-                    <TableCell>11953237408</TableCell>
-                    <TableCell>Category</TableCell>
                   </TableRow>
                 )}
           </TableBody>
         </Table>
       </div>
-      <Pagination
-        pageIndex={0}
-        totalCount={10}
-        perPage={5}
-        onPageChange={() => {}}
-      />
+      {result && (
+        <Pagination
+          pageIndex={result.pageIndex}
+          totalCount={result.totalCount}
+          perPage={result.perPage}
+          onPageChange={handlePaginate}
+        />
+      )}
     </>
   );
 }
