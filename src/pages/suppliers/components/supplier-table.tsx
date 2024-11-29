@@ -11,7 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ProductSkeletonTable } from "@/pages/products/components/product-skeleton-table";
-import { formatPhoneNumber } from "@/utils/format-phone-number";
 import { useQuery } from "@tanstack/react-query";
 import { Pencil } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
@@ -22,15 +21,14 @@ interface Supplier {
   id?: number;
   uuid?: string;
   name: string;
-  phone: string;
+  phoneNumber: string;
   categorieId: number;
   categories?: Categorie;
 }
 
 export function SupplierTable() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const categorieId = searchParams.get("categorieId");
   const name = searchParams.get("name");
 
   const page = z.coerce
@@ -39,12 +37,11 @@ export function SupplierTable() {
     .parse(searchParams.get("page") ?? "1");
 
   const { data: result, isLoading: isLoadingSupplier } = useQuery({
-    queryKey: ["suppliers", page, name, categorieId],
+    queryKey: ["suppliers", page, name],
     queryFn: () =>
       getSuppliers({
         page,
         name,
-        categorieId,
       }),
   });
 
@@ -52,6 +49,13 @@ export function SupplierTable() {
     console.log(_);
     toast.info("Uuid não encontrado");
   };
+
+  function handlePaginate(pageIndex: number) {
+    setSearchParams((state) => {
+      state.set("page", (pageIndex + 1).toString());
+      return state;
+    });
+  }
 
   return (
     <>
@@ -63,7 +67,6 @@ export function SupplierTable() {
               <TableHead>Id.</TableHead>
               <TableHead>Nome</TableHead>
               <TableHead>Telefone</TableHead>
-              <TableHead>Categoria</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -87,40 +90,28 @@ export function SupplierTable() {
                       </TableCell>
                       <TableCell>{supplier.id}</TableCell>
                       <TableCell>{supplier.name}</TableCell>
-                      <TableCell>{formatPhoneNumber(supplier.phone)}</TableCell>
-                      <TableCell>
-                        {supplier.categories && supplier.categories.name}
-                      </TableCell>
+                      <TableCell>{supplier.phoneNumber}</TableCell>
                     </TableRow>
                   );
                 })
               : isLoadingSupplier !== true && (
-                  // <TableRow>
-                  //   <TableCell colSpan={5} className="text-center">
-                  //     Nenhum produto encontrado.
-                  //   </TableCell>
-                  // </TableRow>
                   <TableRow>
-                    <TableCell>
-                      <Button variant="outline" className="flex gap-2">
-                        <Pencil className="h-3 w-3" />
-                      </Button>
+                    <TableCell colSpan={5} className="text-center">
+                      Nenhum fornecedor encontrado.
                     </TableCell>
-                    <TableCell>1</TableCell>
-                    <TableCell>Supplier</TableCell>
-                    <TableCell>{formatPhoneNumber("11953237408")}</TableCell>
-                    <TableCell>Category</TableCell>
                   </TableRow>
                 )}
           </TableBody>
         </Table>
       </div>
-      <Pagination
-        pageIndex={0}
-        totalCount={10}
-        perPage={5}
-        onPageChange={() => {}}
-      />
+      {result && (
+        <Pagination
+          pageIndex={result.pageIndex}
+          totalCount={result.totalCount}
+          perPage={result.perPage}
+          onPageChange={handlePaginate}
+        />
+      )}
     </>
   );
 }

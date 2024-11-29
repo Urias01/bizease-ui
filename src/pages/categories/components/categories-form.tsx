@@ -37,7 +37,7 @@ export function CategoriesForm() {
     mutationFn: createCategorie,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["categories"],
+        queryKey: ["categories", "categories-to-select"],
       });
     },
   });

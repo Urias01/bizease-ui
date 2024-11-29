@@ -1,7 +1,9 @@
+import { createSupplier } from "@/api/suppliers/create-supplier";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -9,32 +11,30 @@ import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input, InputProps } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { queryClient } from "@/lib/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import InputMask from "react-input-mask";
 import { z } from "zod";
 
 const supplierSchema = z.object({
-  uuid: z.string().nullish(),
   cnpj: z.string(),
   name: z.string().min(1, "Nome é obrigatório"),
   address: z.string(),
-  address_number: z.string(),
+  addressNumber: z.string(),
   neighborhood: z.string(),
   city: z.string(),
   uf: z.string(),
   postalCode: z.string(),
   phoneNumber: z.string(),
   email: z.string(),
+  category: z.string(),
 });
 
 type SupplierSchema = z.infer<typeof supplierSchema>;
 
-interface SupplierFormProps {
-  uuid?: string;
-}
-
-export function SupplierForm({ uuid }: SupplierFormProps) {
+export function SupplierForm() {
   const form = useForm<SupplierSchema>({
     resolver: zodResolver(supplierSchema),
     mode: "onChange",
@@ -47,8 +47,17 @@ export function SupplierForm({ uuid }: SupplierFormProps) {
     formState: { isSubmitting },
   } = form;
 
+  const { mutateAsync: createSupplierFn } = useMutation({
+    mutationFn: createSupplier,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["suppliers"],
+      });
+    },
+  });
+
   async function sendSupplierForm(data: SupplierSchema) {
-    console.log(data, uuid);
+    createSupplierFn(data);
     reset();
   }
 
@@ -81,7 +90,11 @@ export function SupplierForm({ uuid }: SupplierFormProps) {
                   defaultValue=""
                   render={({ field }) => (
                     <InputMask {...field} mask="99.999.999/9999-99">
-                      {(inputProps: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>) => (
+                      {(
+                        inputProps: React.ForwardRefExoticComponent<
+                          InputProps & React.RefAttributes<HTMLInputElement>
+                        >
+                      ) => (
                         <Input
                           id="cnpj"
                           {...inputProps}
@@ -110,7 +123,11 @@ export function SupplierForm({ uuid }: SupplierFormProps) {
                   defaultValue=""
                   render={({ field }) => (
                     <InputMask {...field} mask="(99) 99999-9999">
-                      {(inputProps: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>) => (
+                      {(
+                        inputProps: React.ForwardRefExoticComponent<
+                          InputProps & React.RefAttributes<HTMLInputElement>
+                        >
+                      ) => (
                         <Input
                           id="phone"
                           {...inputProps}
@@ -119,6 +136,14 @@ export function SupplierForm({ uuid }: SupplierFormProps) {
                       )}
                     </InputMask>
                   )}
+                />
+                <FormMessage />
+              </FormItem>
+              <FormItem>
+                <Label htmlFor="category">Categoria</Label>
+                <Input
+                  id="category"
+                  {...register("category")}
                 />
                 <FormMessage />
               </FormItem>
@@ -132,7 +157,11 @@ export function SupplierForm({ uuid }: SupplierFormProps) {
                   defaultValue=""
                   render={({ field }) => (
                     <InputMask {...field} mask="99999-999">
-                      {(inputProps: React.ForwardRefExoticComponent<InputProps & React.RefAttributes<HTMLInputElement>>) => (
+                      {(
+                        inputProps: React.ForwardRefExoticComponent<
+                          InputProps & React.RefAttributes<HTMLInputElement>
+                        >
+                      ) => (
                         <Input
                           id="postalCode"
                           {...inputProps}
@@ -151,11 +180,11 @@ export function SupplierForm({ uuid }: SupplierFormProps) {
                   <FormMessage />
                 </FormItem>
                 <FormItem className="col-span-2">
-                  <Label htmlFor="address_number">Número</Label>
+                  <Label htmlFor="addressNumber">Número</Label>
                   <Input
-                    id="address_number"
+                    id="addressNumber"
                     placeholder="Ex.. 52A"
-                    {...register("address_number")}
+                    {...register("addressNumber")}
                   />
                   <FormMessage />
                 </FormItem>
@@ -179,9 +208,11 @@ export function SupplierForm({ uuid }: SupplierFormProps) {
               </div>
             </div>
           </div>
-          <Button type="submit" disabled={isSubmitting}>
-            Criar fornecedor
-          </Button>
+          <DialogFooter className="flex flex-row-reverse">
+            <Button type="submit" disabled={isSubmitting}>
+              Criar fornecedor
+            </Button>
+          </DialogFooter>
         </form>
       </Form>
     </DialogContent>

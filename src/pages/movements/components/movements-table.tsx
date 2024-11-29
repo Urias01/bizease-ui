@@ -8,7 +8,6 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { ProductSkeletonTable } from "@/pages/products/components/product-skeleton-table";
-import { formatPhoneNumber } from "@/utils/format-phone-number";
 import { useQuery } from "@tanstack/react-query";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -80,7 +79,7 @@ export function MovementsTable() {
                       </TableCell>
                       <TableCell>{movement.uuid}</TableCell>
                       <TableCell>{movement.product}</TableCell>
-                      <TableCell>{formatPhoneNumber(movement.type)}</TableCell>
+                      <TableCell>{movement.type}</TableCell>
                       <TableCell>
                         {movement.product && movement.product}
                       </TableCell>
@@ -101,7 +100,7 @@ export function MovementsTable() {
                     </TableCell>
                     <TableCell>1</TableCell>
                     <TableCell>Movimentação</TableCell>
-                    <TableCell>{formatPhoneNumber("11953237408")}</TableCell>
+                    <TableCell>11953237408</TableCell>
                     <TableCell>Category</TableCell>
                   </TableRow>
                 )}

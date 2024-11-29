@@ -5,7 +5,6 @@ export interface GetSupplierQuery {
   page?: number | null;
   size?: number | null;
   name?: string | null;
-  categorieId?: string | null;
 }
 
 interface SupplierResponse {
@@ -13,30 +12,26 @@ interface SupplierResponse {
     id?: number;
     uuid?: string;
     name: string;
-    phone: string;
+    phoneNumber: string;
     categorieId: number;
     categories?: Categorie;
   }[];
-  meta: {
-    pageIndex: number;
-    perPage: number;
-    totalCount: number;
-  };
+  pageIndex: number;
+  perPage: number;
+  totalCount: number;
 }
 
 export async function getSuppliers({
   page,
-  size,
+  size = 5,
   name,
-  categorieId,
 }: GetSupplierQuery) {
   const response = await api
-    .get<SupplierResponse>("/products", {
+    .get<SupplierResponse>("/suppliers", {
       params: {
         page,
         size,
-        name,
-        categorieId,
+        name
       },
     })
     .catch((err) => {

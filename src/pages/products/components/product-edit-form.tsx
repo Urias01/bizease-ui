@@ -89,7 +89,7 @@ export function ProductEditForm({ uuid, open }: ProductFormProps) {
     .parse(searchParams.get("page") ?? "1");
 
   const { data: result } = useQuery({
-    queryKey: ["categories", page, name],
+    queryKey: ["categories-to-select", page, name],
     queryFn: () =>
       getCategories({
         page,
