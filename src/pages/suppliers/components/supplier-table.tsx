@@ -1,7 +1,6 @@
-import { Categorie } from "@/@types/categorie";
 import { getSuppliers } from "@/api/suppliers/get-suppliers";
 import { Pagination } from "@/components/pagination";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -14,20 +13,16 @@ import { ProductSkeletonTable } from "@/pages/products/components/product-skelet
 import { useQuery } from "@tanstack/react-query";
 import { Pencil } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
-import { toast } from "sonner";
 import { z } from "zod";
-
-interface Supplier {
-  id?: number;
-  uuid?: string;
-  name: string;
-  phoneNumber: string;
-  categorieId: number;
-  categories?: Categorie;
-}
+import { SupplierEditForm } from "./supplier-edit-form";
+import { useState } from "react";
 
 export function SupplierTable() {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const [isSupplierDetailsOpen, setIsSupplierDetailsOpen] = useState(false);
+
+  const [selectedSupplierUuid, setSelectedSupplierUuid] = useState<string>("");
 
   const id = searchParams.get("id");
   const name = searchParams.get("name");
@@ -47,17 +42,17 @@ export function SupplierTable() {
       }),
   });
 
-  const handleEditClick = (_: string) => {
-    console.log(_);
-    toast.info("Uuid não encontrado");
-  };
-
   function handlePaginate(pageIndex: number) {
     setSearchParams((state) => {
       state.set("page", (pageIndex + 1).toString());
       return state;
     });
   }
+
+  const handlSupplierSelect = (supplierUuid: string) => {
+    setSelectedSupplierUuid(supplierUuid);
+    setIsSupplierDetailsOpen(true);
+  };
 
   return (
     <>
@@ -74,21 +69,28 @@ export function SupplierTable() {
           <TableBody>
             {isLoadingSupplier && <ProductSkeletonTable />}
             {result?.data?.length !== undefined && result?.data?.length > 0
-              ? result.data.map((supplier: Supplier) => {
+              ? result.data.map((supplier) => {
                   return (
                     <TableRow key={supplier.id}>
                       <TableCell>
-                        <Button
-                          variant="outline"
-                          className="flex gap-2"
-                          onClick={() =>
-                            handleEditClick(
-                              supplier.uuid !== undefined ? supplier.uuid : ""
-                            )
+                        <Dialog
+                          open={
+                            isSupplierDetailsOpen &&
+                            selectedSupplierUuid === supplier.uuid
                           }
+                          onOpenChange={setIsSupplierDetailsOpen}
                         >
-                          <Pencil className="h-3 w-3" />
-                        </Button>
+                          <DialogTrigger asChild>
+                            <Pencil
+                              className="h-3 w-3 cursor-pointer"
+                              onClick={() => handlSupplierSelect(supplier.uuid)}
+                            />
+                          </DialogTrigger>
+                          <SupplierEditForm
+                            uuid={selectedSupplierUuid}
+                            open={isSupplierDetailsOpen}
+                          />
+                        </Dialog>
                       </TableCell>
                       <TableCell>{supplier.id}</TableCell>
                       <TableCell>{supplier.name}</TableCell>
