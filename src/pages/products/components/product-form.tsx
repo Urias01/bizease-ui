@@ -72,10 +72,11 @@ export function ProductForm() {
     .parse(searchParams.get("page") ?? "1");
 
   const { data: result } = useQuery({
-    queryKey: ["categories", page, name],
+    queryKey: ["categories-to-select", page, name],
     queryFn: () =>
       getCategories({
         page,
+        size: 999,
         name,
       }),
   });
@@ -146,7 +147,7 @@ export function ProductForm() {
                   <SelectContent>
                     {result && result.data.length > 0 ? (
                       result.data.map((category) => (
-                        <SelectItem key={category.id} value={category.uuid}>
+                        <SelectItem key={category.uuid} value={category.uuid}>
                           {category.name}
                         </SelectItem>
                       ))
