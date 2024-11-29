@@ -76,7 +76,7 @@ export function ProductForm() {
     queryKey: ["categories-to-select", page, name],
     queryFn: () =>
       getCategories({
-        page,
+        page: 0,
         size: 999,
         name,
       }),

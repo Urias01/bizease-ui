@@ -30,6 +30,7 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { queryClient } from "@/lib/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SelectGroup } from "@radix-ui/react-select";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -92,7 +93,8 @@ export function ProductEditForm({ uuid, open }: ProductFormProps) {
     queryKey: ["categories-to-select", page, name],
     queryFn: () =>
       getCategories({
-        page,
+        page: 0,
+        size: 999,
         name,
       }),
   });
@@ -184,7 +186,9 @@ export function ProductEditForm({ uuid, open }: ProductFormProps) {
                         </SelectItem>
                       ))
                     ) : (
-                      <SelectLabel> Nenhuma categoria encontrada</SelectLabel>
+                      <SelectGroup>
+                        <SelectLabel> Nenhuma categoria encontrada</SelectLabel>
+                      </SelectGroup>
                     )}
                   </SelectContent>
                 </Select>
