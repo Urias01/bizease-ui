@@ -16,6 +16,7 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
 import { Pagination } from "@/components/pagination";
 import { ProductEditForm } from "./product-edit-form";
+import { Button } from "@/components/ui/button";
 
 export function ProductTable() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -84,10 +85,12 @@ export function ProductTable() {
                           onOpenChange={setIsProductDetailsOpen}
                         >
                           <DialogTrigger asChild>
-                            <Pencil
-                              className="h-3 w-3 cursor-pointer"
+                            <Button
+                              variant="outline"
                               onClick={() => handlProductSelect(product.uuid)}
-                            />
+                            >
+                              <Pencil className="h-3 w-3 cursor-pointer" />
+                            </Button>
                           </DialogTrigger>
                           <ProductEditForm
                             uuid={selectedProductUuid}

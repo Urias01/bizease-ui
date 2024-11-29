@@ -16,6 +16,7 @@ import { Pagination } from "@/components/pagination";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
 import { CategoriesEditForm } from "./categories-edit-form";
+import { Button } from "@/components/ui/button";
 
 export function CategoriesTable() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -81,12 +82,14 @@ export function CategoriesTable() {
                           onOpenChange={setIsCategoryDetailsOpen}
                         >
                           <DialogTrigger asChild>
-                            <Pencil
-                              className="h-3 w-3 cursor-pointer"
+                            <Button
+                              variant="outline"
                               onClick={() =>
                                 handleCategorySelect(category.uuid)
                               }
-                            />
+                            >
+                              <Pencil className="h-3 w-3 cursor-pointer" />
+                            </Button>
                           </DialogTrigger>
                           <CategoriesEditForm
                             uuid={selectedCategoryUuid}

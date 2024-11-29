@@ -16,6 +16,7 @@ import { useSearchParams } from "react-router-dom";
 import { z } from "zod";
 import { SupplierEditForm } from "./supplier-edit-form";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export function SupplierTable() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -81,10 +82,12 @@ export function SupplierTable() {
                           onOpenChange={setIsSupplierDetailsOpen}
                         >
                           <DialogTrigger asChild>
-                            <Pencil
-                              className="h-3 w-3 cursor-pointer"
+                            <Button
+                              variant="outline"
                               onClick={() => handlSupplierSelect(supplier.uuid)}
-                            />
+                            >
+                              <Pencil className="h-3 w-3 cursor-pointer" />
+                            </Button>
                           </DialogTrigger>
                           <SupplierEditForm
                             uuid={selectedSupplierUuid}
