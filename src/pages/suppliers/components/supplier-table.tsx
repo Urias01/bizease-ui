@@ -29,6 +29,7 @@ interface Supplier {
 export function SupplierTable() {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const id = searchParams.get("id");
   const name = searchParams.get("name");
 
   const page = z.coerce
@@ -37,11 +38,12 @@ export function SupplierTable() {
     .parse(searchParams.get("page") ?? "1");
 
   const { data: result, isLoading: isLoadingSupplier } = useQuery({
-    queryKey: ["suppliers", page, name],
+    queryKey: ["suppliers", page, name, id],
     queryFn: () =>
       getSuppliers({
         page,
         name,
+        id,
       }),
   });
 
