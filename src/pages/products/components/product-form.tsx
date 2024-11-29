@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectLabel,
   SelectTrigger,
@@ -53,7 +54,7 @@ export function ProductForm() {
     resolver: zodResolver(productSchema),
   });
 
-  const { register, handleSubmit, reset } = form;
+  const { register, handleSubmit, reset, setValue } = form;
 
   const { mutateAsync: createProductFn } = useMutation({
     mutationFn: createProduct,
@@ -95,6 +96,7 @@ export function ProductForm() {
       });
 
     reset();
+    setValue("categoryUuid", "");
   }
 
   return (
@@ -152,7 +154,9 @@ export function ProductForm() {
                         </SelectItem>
                       ))
                     ) : (
-                      <SelectLabel> Nenhuma categoria encontrada</SelectLabel>
+                      <SelectGroup>
+                        <SelectLabel> Nenhuma categoria encontrada</SelectLabel>
+                      </SelectGroup>
                     )}
                   </SelectContent>
                 </Select>
