@@ -5,6 +5,7 @@ interface GetMovementsQuery {
   size?: number | null;
   id?: string | null;
   type?: string | null;
+  origin?: string | null;
 }
 
 interface GetMovementsResponse {
@@ -36,6 +37,7 @@ export async function getMovements({
   size = 5,
   id,
   type,
+  origin,
 }: GetMovementsQuery) {
   const response = await api.get<GetMovementsResponse>('/movements', {
     params: {
@@ -43,6 +45,7 @@ export async function getMovements({
       size,
       id,
       type,
+      origin,
     }
   });
 

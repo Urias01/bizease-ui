@@ -21,6 +21,7 @@ export function MovementsTable() {
 
   const id = searchParams.get("id");
   const type = searchParams.get("type");
+  const origin = searchParams.get("origin");
 
   const page = z.coerce
     .number()
@@ -28,8 +29,8 @@ export function MovementsTable() {
     .parse(searchParams.get("page") ?? "1");
 
   const { data: result, isLoading: isLoadingProduct } = useQuery({
-    queryKey: ["movements", page, id],
-    queryFn: () => getMovements({ page, id, type }),
+    queryKey: ["movements", page, id, type, origin],
+    queryFn: () => getMovements({ page, id, type, origin }),
   });
 
   const handleEditClick = (_: string) => {
