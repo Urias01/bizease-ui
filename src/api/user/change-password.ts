@@ -1,6 +1,5 @@
 import { api } from "@/lib/axios";
 
-
 interface ChangePasswordRequest {
     currentPassword: string;
     newPassword: string;
