@@ -1,8 +1,12 @@
+import { api } from "@/lib/axios";
 
 export interface GetUsersQuery {
   page?: number | null;
   size?: number | null;
+  id?: string | null;
   name?: string | null;
+  email?: string | null;
+  isActive?: string | null;
 }
 
 interface GetUsersByComerceResponse {
@@ -10,17 +14,34 @@ interface GetUsersByComerceResponse {
     id: string,
     uuid: string,
     name: string,
-    isActive: true,
+    email: string
+    isActive: string,
   }[];
-  meta: {
-    pageIndex: number;
-    perPage: number;
-    totalCount: number;
-  };
+  pageIndex: number;
+  perPage: number;
+  totalCount: number;
 }
 
-export async function getUsersByCommerce({ page, size, name }: GetUsersQuery) {
-  const response: GetUsersByComerceResponse = {} as GetUsersByComerceResponse
+export async function getUsersByCommerce({
+  page,
+  size = 5,
+  id,
+  name,
+  email,
+  isActive
+}: GetUsersQuery) {
+  isActive = isActive === "all" ? "" : isActive;
 
-  return response;
+  const response = await api.get<GetUsersByComerceResponse>('/users', {
+    params: {
+      page,
+      size,
+      id,
+      name,
+      email,
+      isActive
+    }
+  })
+
+  return response.data;
 }
