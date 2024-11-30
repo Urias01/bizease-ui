@@ -30,7 +30,7 @@ export async function getUsersByCommerce({
   email,
   isActive
 }: GetUsersQuery) {
-  isActive = isActive === "all" ? "" : isActive;
+  isActive = isActive === "all" ? null : isActive;
 
   const response = await api.get<GetUsersByComerceResponse>('/users', {
     params: {
