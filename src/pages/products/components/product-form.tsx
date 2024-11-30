@@ -100,12 +100,12 @@ export function ProductForm() {
   }
 
   return (
-    <DialogContent>
+    <DialogContent className="min-w-fit">
       <DialogHeader>
         <DialogTitle>Criar novo produto</DialogTitle>
         <DialogDescription>
-          Crie novos produtos para o seu comércio aqui, não se esqueça de
-          cadastrar uma categoria para o seu produto
+          Crie novos produtos para o seu comércio aqui,{" "}
+          <b>não se esqueça de cadastrar uma categoria para o seu produto</b>
         </DialogDescription>
       </DialogHeader>
       <Separator className="w-full" />
@@ -114,74 +114,85 @@ export function ProductForm() {
           onSubmit={handleSubmit(registerProduct)}
           className="grid gap-4 py-4"
         >
-          <div className="grid grid-cols-5 items-center gap-4">
-            <Label htmlFor="name">Nome:</Label>
-            <Input className="col-span-5" id="name" {...register("name")} />
+          <div className="grid grid-cols-12 gap-4">
+            <div className="col-span-6">
+              <FormItem>
+                <Label htmlFor="name">Nome:</Label>
+                <Input className="col-span-5" id="name" {...register("name")} />
+              </FormItem>
+
+              <div className="grid grid-cols-4 gap-4">
+                <FormItem className="space-y-2 col-span-1">
+                  <Label htmlFor="unit">Quantidade:</Label>
+                  <Input id="unit" {...register("unit")} />
+                </FormItem>
+                <FormItem className="space-y-2 col-span-3">
+                  <Label htmlFor="minimumStock">
+                    Quantidade mínima em estoque:
+                  </Label>
+                  <Input id="minimumStock" {...register("minimumStock")} />
+                </FormItem>
+              </div>
+              <FormField
+                control={form.control}
+                name="categoryUuid"
+                render={({ field }) => (
+                  <FormItem>
+                    <Label htmlFor="categoryUuid">Categoria</Label>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione uma categoria" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {result && result.data.length > 0 ? (
+                          result.data.map((category) => (
+                            <SelectItem
+                              key={category.uuid}
+                              value={category.uuid}
+                            >
+                              {category.name}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <SelectGroup>
+                            <SelectLabel>
+                              {" "}
+                              Nenhuma categoria encontrada
+                            </SelectLabel>
+                          </SelectGroup>
+                        )}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="col-span-6">
+              <div className="grid grid-cols-5 items-center gap-4">
+                <Label htmlFor="location">Localização:</Label>
+                <Textarea
+                  className="col-span-5"
+                  {...register("location")}
+                  placeholder="Onde seu produto esta localizado."
+                  id="location"
+                />
+              </div>
+              <Label htmlFor="description">Descrição:</Label>
+              <Textarea
+                className="col-span-5"
+                {...register("description")}
+                placeholder="Descreva seu produto aqui."
+                id="description"
+              />
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="unit">Quantidade:</Label>
-              <Input id="unit" {...register("unit")} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="minimumStock">
-                Quantidade mínima em estoque:
-              </Label>
-              <Input id="minimumStock" {...register("minimumStock")} />
-            </div>
-          </div>
-          <FormField
-            control={form.control}
-            name="categoryUuid"
-            render={({ field }) => (
-              <FormItem>
-                <Label htmlFor="categoryUuid">Categoria</Label>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione uma categoria" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {result && result.data.length > 0 ? (
-                      result.data.map((category) => (
-                        <SelectItem key={category.uuid} value={category.uuid}>
-                          {category.name}
-                        </SelectItem>
-                      ))
-                    ) : (
-                      <SelectGroup>
-                        <SelectLabel> Nenhuma categoria encontrada</SelectLabel>
-                      </SelectGroup>
-                    )}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className="grid grid-cols-5 items-center gap-4">
-            <Label htmlFor="location">Localização:</Label>
-            <Textarea
-              className="col-span-5"
-              {...register("location")}
-              placeholder="Onde seu produto esta localizado."
-              id="location"
-            />
-          </div>
-          <div className="grid grid-cols-5 items-center gap-4">
-            <Label htmlFor="description">Descrição:</Label>
-            <Textarea
-              className="col-span-5"
-              {...register("description")}
-              placeholder="Descreva seu produto aqui."
-              id="description"
-            />
-          </div>
           <Separator className="w-full" />
           <DialogFooter>
             <Button type="submit">Criar produto</Button>
