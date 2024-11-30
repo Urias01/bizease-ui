@@ -1,3 +1,4 @@
+import { getLostProducts } from "@/api/sales-order-items/get-lost-products";
 import {
   Card,
   CardContent,
@@ -11,7 +12,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { TrendingUp } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { Label, PieChart, Pie, Cell } from "recharts";
 
@@ -58,9 +59,18 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function InputLoss() {
+  const { data: lostProducts } = useQuery({
+    queryKey: ["lost-products"],
+    queryFn: () => getLostProducts(),
+  });
+
   const totalVisitors = React.useMemo(() => {
-    return response.reduce((acc, curr) => acc + curr.quantity, 0);
-  }, []);
+    if (Array.isArray(lostProducts)) {
+      return lostProducts.reduce((acc, curr) => acc + curr.quantity, 0);
+    } else {
+      return 0;
+    }
+  }, [lostProducts]);
 
   return (
     <Card className="col-span-full md:col-span-3">
@@ -81,49 +91,51 @@ export function InputLoss() {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Pie
-              data={response}
-              dataKey="quantity"
-              nameKey="product"
-              innerRadius={60}
-              strokeWidth={5}
-            >
-              {response.map((_, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={colors[index % colors.length]}
-                />
-              ))}
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
+            {lostProducts && Array.isArray(lostProducts) && (
+              <Pie
+                data={lostProducts}
+                dataKey="quantity"
+                nameKey="product"
+                innerRadius={60}
+                strokeWidth={5}
+              >
+                {response.map((_, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={colors[index % colors.length]}
+                  />
+                ))}
+                <Label
+                  content={({ viewBox }) => {
+                    if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                      return (
+                        <text
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
+                          textAnchor="middle"
+                          dominantBaseline="middle"
                         >
-                          {totalVisitors.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          Produtos
-                        </tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </Pie>
+                          <tspan
+                            x={viewBox.cx}
+                            y={viewBox.cy}
+                            className="fill-foreground text-3xl font-bold"
+                          >
+                            {totalVisitors.toLocaleString()}
+                          </tspan>
+                          <tspan
+                            x={viewBox.cx}
+                            y={(viewBox.cy || 0) + 24}
+                            className="fill-muted-foreground"
+                          >
+                            Produtos
+                          </tspan>
+                        </text>
+                      );
+                    }
+                  }}
+                />
+              </Pie>
+            )}
           </PieChart>
         </ChartContainer>
       </CardContent>
