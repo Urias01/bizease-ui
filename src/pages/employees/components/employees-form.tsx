@@ -1,3 +1,4 @@
+import { createEmployee } from "@/api/user/create-employee";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -8,7 +9,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormMessage,
@@ -22,8 +22,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+import { queryClient } from "@/lib/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -35,8 +36,6 @@ const employeeSchema = z.object({
     .min(1, "E-mail é obrigatório"),
   password: z.string().min(6, "A senha deve ter no mínimo 6 caracteres"),
   role: z.enum(["EMPLOYEE", "OWNER"]),
-  isActive: z.boolean(),
-  commerceUuid: z.string(),
 });
 
 type EmployeeSchema = z.infer<typeof employeeSchema>;
@@ -48,8 +47,17 @@ export function EmployeesForm() {
 
   const { register, handleSubmit, reset } = form;
 
+  const { mutateAsync: createEmployeeFn } = useMutation({
+    mutationFn: createEmployee,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
+    },
+  });
+
   async function sendEmployeeForm(data: EmployeeSchema) {
-    console.log(data);
+    createEmployeeFn(data);
     reset();
   }
 
@@ -97,26 +105,6 @@ export function EmployeesForm() {
                     </SelectContent>
                   </Select>
                   <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="isActive"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <Label className="text-base">Funcionário ativo?</Label>
-                    <FormDescription>
-                      Caso desativado ele não conseguirá logar no sistema
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
                 </FormItem>
               )}
             />
