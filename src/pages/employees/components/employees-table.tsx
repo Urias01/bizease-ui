@@ -1,9 +1,11 @@
+import { enableDisableUser } from "@/api/user/enable-disable-user";
 import { getUsersByCommerce } from "@/api/user/get-users-by-commerce";
 import { Pagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
@@ -16,8 +18,9 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import { queryClient } from "@/lib/react-query";
 import { TableCategoriesSkeleton } from "@/pages/categories/components/categories-skeleton-table";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -26,6 +29,10 @@ import { z } from "zod";
 export function EmployeesTable() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isConfirmActivateDialogOpen, setIsConfirmActivateDialogOpen] =
+    useState(false);
+
+  const [selectedEmployeeUuid, setSelectedEmployeeUuid] = useState<string>("");
 
   const id = searchParams.get("id");
   const name = searchParams.get("name");
@@ -55,6 +62,20 @@ export function EmployeesTable() {
       return state;
     });
   }
+
+  const { mutateAsync: enableDisableUserFn } = useMutation({
+    mutationFn: enableDisableUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["users"],
+      });
+    },
+  });
+
+  const handleEmployeeSelect = (employeeUuid: string) => {
+    setSelectedEmployeeUuid(employeeUuid);
+    setIsConfirmDialogOpen(true);
+  };
 
   return (
     <>
@@ -106,26 +127,39 @@ export function EmployeesTable() {
                       <TableCell className="w-[132px]">
                         {employee.isActive === "ACTIVE" ? (
                           <Dialog
-                            open={isConfirmDialogOpen}
+                            open={
+                              isConfirmDialogOpen &&
+                              selectedEmployeeUuid === employee.uuid
+                            }
                             onOpenChange={setIsConfirmDialogOpen}
                           >
                             <DialogTrigger asChild>
-                              <Button type="button" variant="destructive">
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                onClick={() =>
+                                  handleEmployeeSelect(employee.uuid)
+                                }
+                              >
                                 Desativar
                               </Button>
                             </DialogTrigger>
                             <DialogContent>
+                              <DialogDescription></DialogDescription>
                               <DialogTitle>
                                 Atenção você estará desativando um usuário!
                               </DialogTitle>
                               <Separator orientation="horizontal" />
                               <h2>
-                                Tem certeza que deseja desativar esse usuário?
+                                Tem certeza que deseja desativar o usuário{" "}
+                                {employee.name}?
                               </h2>
                               <div className="flex flex-row-reverse gap-4">
                                 <Button
                                   variant="destructive"
-                                  onClick={() => {}}
+                                  onClick={() =>
+                                    enableDisableUserFn({ uuid: employee.uuid })
+                                  }
                                 >
                                   Sim
                                 </Button>
@@ -141,7 +175,54 @@ export function EmployeesTable() {
                             </DialogContent>
                           </Dialog>
                         ) : (
-                          <Button variant="outline">Ativar</Button>
+                          <Dialog
+                            open={
+                              isConfirmActivateDialogOpen &&
+                              selectedEmployeeUuid === employee.uuid
+                            }
+                            onOpenChange={setIsConfirmActivateDialogOpen}
+                          >
+                            <DialogTrigger asChild>
+                              <Button
+                                type="button"
+                                variant="success"
+                                onClick={() =>
+                                  handleEmployeeSelect(employee.uuid)
+                                }
+                              >
+                                Ativar
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogDescription></DialogDescription>
+                              <DialogTitle>
+                                Atenção você estará ativando um usuário!
+                              </DialogTitle>
+                              <Separator orientation="horizontal" />
+                              <h2>
+                                Tem certeza que deseja re-ativar o usuário{" "}
+                                {employee.name}?
+                              </h2>
+                              <div className="flex flex-row-reverse gap-4">
+                                <Button
+                                  variant="success"
+                                  onClick={() =>
+                                    enableDisableUserFn({ uuid: employee.uuid })
+                                  }
+                                >
+                                  Sim
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  onClick={() => {
+                                    setIsConfirmActivateDialogOpen(false);
+                                  }}
+                                >
+                                  Cancelar
+                                </Button>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
                         )}
                       </TableCell>
                     </TableRow>

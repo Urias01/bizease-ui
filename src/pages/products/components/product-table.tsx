@@ -52,7 +52,7 @@ export function ProductTable() {
     });
   }
 
-  const handlProductSelect = (productUuid: string) => {
+  const handleProductSelect = (productUuid: string) => {
     setSelectedProductUuid(productUuid);
     setIsProductDetailsOpen(true);
   };
@@ -87,7 +87,7 @@ export function ProductTable() {
                           <DialogTrigger asChild>
                             <Button
                               variant="outline"
-                              onClick={() => handlProductSelect(product.uuid)}
+                              onClick={() => handleProductSelect(product.uuid)}
                             >
                               <Pencil className="h-3 w-3 cursor-pointer" />
                             </Button>
