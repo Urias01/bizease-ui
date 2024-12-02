@@ -4,6 +4,7 @@ export interface ProductRequest {
   name: string;
   unit: number;
   minimumStock: number;
+  location: string;
   categoryUuid: string;
   description: string;
 }
@@ -12,6 +13,7 @@ export async function createProduct({
   name,
   unit,
   minimumStock,
+  location,
   categoryUuid,
   description,
 }: ProductRequest) {
@@ -19,6 +21,7 @@ export async function createProduct({
     name,
     unit,
     minimumStock,
+    location,
     categoryUuid,
     description,
   });
