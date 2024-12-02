@@ -25,12 +25,14 @@ import { Pencil } from "lucide-react";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { z } from "zod";
+import { EmployeesEditForm } from "./employees-edit-form";
 
 export function EmployeesTable() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [isConfirmActivateDialogOpen, setIsConfirmActivateDialogOpen] =
     useState(false);
+  const [isEmployeeDetailsOpen, setIsEmployeeDetailsOpen] = useState(false);
 
   const [selectedEmployeeUuid, setSelectedEmployeeUuid] = useState<string>("");
 
@@ -72,9 +74,14 @@ export function EmployeesTable() {
     },
   });
 
-  const handleEmployeeSelect = (employeeUuid: string) => {
+  const handleActiveAndDeactiveEmployeeSelect = (employeeUuid: string) => {
     setSelectedEmployeeUuid(employeeUuid);
     setIsConfirmDialogOpen(true);
+  };
+
+  const handleEmployeeSelect = (employeeUuid: string) => {
+    setSelectedEmployeeUuid(employeeUuid);
+    setIsEmployeeDetailsOpen(true);
   };
 
   return (
@@ -98,7 +105,28 @@ export function EmployeesTable() {
                   return (
                     <TableRow key={employee.id}>
                       <TableCell className="w-[64px]">
-                        <Pencil className="h-3 w-3" />
+                        <Dialog
+                          open={
+                            isEmployeeDetailsOpen &&
+                            selectedEmployeeUuid === employee.uuid
+                          }
+                          onOpenChange={setIsEmployeeDetailsOpen}
+                        >
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              onClick={() =>
+                                handleEmployeeSelect(employee.uuid)
+                              }
+                            >
+                              <Pencil className="h-3 w-3 cursor-pointer" />
+                            </Button>
+                          </DialogTrigger>
+                          <EmployeesEditForm
+                            uuid={selectedEmployeeUuid}
+                            open={isEmployeeDetailsOpen}
+                          />
+                        </Dialog>
                       </TableCell>
                       <TableCell className="w-[64px]">{employee.id}</TableCell>
                       <TableCell className="w-[180px]">
@@ -138,7 +166,9 @@ export function EmployeesTable() {
                                 type="button"
                                 variant="destructive"
                                 onClick={() =>
-                                  handleEmployeeSelect(employee.uuid)
+                                  handleActiveAndDeactiveEmployeeSelect(
+                                    employee.uuid
+                                  )
                                 }
                               >
                                 Desativar
@@ -187,7 +217,9 @@ export function EmployeesTable() {
                                 type="button"
                                 variant="success"
                                 onClick={() =>
-                                  handleEmployeeSelect(employee.uuid)
+                                  handleActiveAndDeactiveEmployeeSelect(
+                                    employee.uuid
+                                  )
                                 }
                               >
                                 Ativar
