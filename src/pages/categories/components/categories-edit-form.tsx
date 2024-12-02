@@ -31,7 +31,7 @@ interface CategoriesFormProps {
 
 const categorieSchema = z.object({
   name: z.string().min(3).max(100),
-  description: z.string().min(10).max(500).optional(),
+  description: z.string().max(500).optional(),
 });
 
 type CategorieSchema = z.infer<typeof categorieSchema>;
@@ -85,8 +85,6 @@ export function CategoriesEditForm({ uuid, open }: CategoriesFormProps) {
           toast.error("Ocorreu um erro desconhecido");
         }
       });
-
-    reset();
   }
 
   useEffect(() => {
@@ -119,7 +117,7 @@ export function CategoriesEditForm({ uuid, open }: CategoriesFormProps) {
             <Label htmlFor="description">Descrição:</Label>
             <Textarea
               className="col-span-5"
-              {...register("description")}
+              {...register("description", { required: false })}
               placeholder="Descreva sua categoria aqui."
               id="description"
             />
@@ -132,7 +130,9 @@ export function CategoriesEditForm({ uuid, open }: CategoriesFormProps) {
                 onOpenChange={setIsConfirmDialogOpen}
               >
                 <DialogTrigger asChild>
-                  <Button type="button" variant="destructive">Desativar</Button>
+                  <Button type="button" variant="destructive">
+                    Desativar
+                  </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogTitle>Atenção !</DialogTitle>

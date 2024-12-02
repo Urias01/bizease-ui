@@ -21,7 +21,7 @@ import { Form } from "@/components/ui/form";
 
 const categorieSchema = z.object({
   name: z.string().min(3).max(100),
-  description: z.string().min(10).max(500).optional(),
+  description: z.string().max(500).optional(),
 });
 
 type CategorieSchema = z.infer<typeof categorieSchema>;

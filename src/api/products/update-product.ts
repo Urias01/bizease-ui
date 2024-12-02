@@ -4,6 +4,7 @@ export interface UpdateProductRequest {
   uuid: string;
   name: string;
   unit: number;
+  location: string;
   minimumStock: number;
   categoryUuid: string;
   description: string;
@@ -13,6 +14,7 @@ export async function updateProduct({
   uuid,
   name,
   unit,
+  location,
   minimumStock,
   categoryUuid,
   description,
@@ -21,6 +23,7 @@ export async function updateProduct({
     name,
     unit,
     minimumStock,
+    location,
     categoryUuid,
     description,
   });
