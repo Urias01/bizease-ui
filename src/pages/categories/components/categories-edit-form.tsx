@@ -43,7 +43,7 @@ export function CategoriesEditForm({ uuid, open }: CategoriesFormProps) {
     resolver: zodResolver(categorieSchema),
   });
 
-  const { register, handleSubmit, reset, setValue } = form;
+  const { register, handleSubmit, setValue } = form;
 
   const { mutateAsync: updateCategoryFn } = useMutation({
     mutationFn: updateCategories,
