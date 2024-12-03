@@ -114,6 +114,7 @@ export function ProductEditForm({ uuid, open }: ProductFormProps) {
       uuid,
       name: data.name,
       unit: data.unit,
+      location: data.location,
       minimumStock: data.minimumStock,
       categoryUuid: data.categoryUuid,
       description: data.description,

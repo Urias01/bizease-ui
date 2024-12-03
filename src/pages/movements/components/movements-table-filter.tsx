@@ -122,7 +122,7 @@ export function MovementsTableFilter() {
                   <SelectItem value="PERDA">Perda</SelectItem>
                   <SelectItem value="DEVOLUCAO">Devolução</SelectItem>
                   <SelectItem value="AJUSTE">Ajuste</SelectItem>
-                  <SelectItem value="TRANSFERÊNCIA">Transferência</SelectItem>
+                  <SelectItem value="TRANSFERENCIA">Transferência</SelectItem>
                 </SelectContent>
               </Select>
             );

@@ -40,6 +40,7 @@ export async function getMovements({
   type,
   origin,
 }: GetMovementsQuery) {
+  
   const response = await api.get<GetMovementsResponse>('/movements', {
     params: {
       page,
