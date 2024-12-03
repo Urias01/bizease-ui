@@ -1,4 +1,3 @@
-import { ProductsTableFilters } from "../products/components/products-table-filters";
 import { ExpiredProductTable } from "./components/expired-product-table";
 
 export function ExpiredProducts() {
@@ -11,7 +10,6 @@ export function ExpiredProducts() {
       </header>
 
       <section className="space-y-4">
-        <ProductsTableFilters />
         <ExpiredProductTable />
       </section>
 
