@@ -8,19 +8,25 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Dialog } from "@radix-ui/react-dialog";
-import { Pencil } from "lucide-react";
+import { Pencil, Search } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { getPurchaseOrder } from "@/api/purcharse-order/get-purcharse-order";
+import { DialogTrigger } from "@/components/ui/dialog";
+import { PurchaseDetails } from "./purchase-details";
 
 export function PurcharsesTable() {
-  const [searchParams] = useSearchParams();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isPurchaseOrderDetailOpen, setIsPurchaseOrderDetailOpen] =
+    useState(false);
+  const [selectedPurchaseOrderUuid, setSelectedPurchaseOrderUuid] =
+    useState<string>("");
 
-  const categorieId = searchParams.get("categorieId");
-  const name = searchParams.get("name");
+  const id = searchParams.get("id");
+  const status = searchParams.get("status");
 
   const page = z.coerce
     .number()
@@ -28,9 +34,29 @@ export function PurcharsesTable() {
     .parse(searchParams.get("page") ?? "1");
 
   const { data: result, isLoading: isLoadingProduct } = useQuery({
-    queryKey: ["purcharses", page, name, categorieId],
-    queryFn: (): any => {},
+    queryKey: ["purchase-orders", page, status, id],
+    queryFn: () =>
+      getPurchaseOrder({
+        page,
+        status,
+        id,
+      }),
   });
+
+  console.log(result);
+
+  const handlePurcharseOrderSelect = (purcharseUuid: string) => {
+    setSelectedPurchaseOrderUuid(purcharseUuid);
+    setIsPurchaseOrderDetailOpen(true);
+  };
+
+  function handlePaginate(pageIndex: number) {
+    setSearchParams((state) => {
+      state.set("page", (pageIndex + 1).toString());
+      return state;
+    });
+  }
+
 
   return (
     <>
@@ -43,70 +69,74 @@ export function PurcharsesTable() {
               <TableHead>Produtos.</TableHead>
               <TableHead>Quantidade de produtos</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {/* {isLoadingProduct && <ProductSkeletonTable />} */}
             {result?.data?.length !== undefined && result?.data?.length > 0
-              ? result.data.map((product: any) => {
+              ? result.data.map((purchaseOder: any) => {
                   return (
-                    <TableRow key={product.id}>
+                    <TableRow key={purchaseOder.id}>
                       <TableCell>
-                        <Button variant="outline" className="flex gap-2">
-                          <Pencil className="h-3 w-3" />
-                        </Button>
+                        <Dialog
+                          open={
+                            isPurchaseOrderDetailOpen &&
+                            selectedPurchaseOrderUuid === purchaseOder.uuid
+                          }
+                          onOpenChange={setIsPurchaseOrderDetailOpen}
+                        >
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              onClick={() =>
+                                handlePurcharseOrderSelect(purchaseOder.uuid)
+                              }
+                            >
+                              <Search className="h-3 w-3 cursor-pointer" />
+                            </Button>
+                          </DialogTrigger>
+                          <PurchaseDetails
+                            uuid={selectedPurchaseOrderUuid}
+                            open={isPurchaseOrderDetailOpen}
+                          />
+                        </Dialog>
                       </TableCell>
-                      <TableCell>{product.id}</TableCell>
-                      <TableCell>{product.name}</TableCell>
-                      <TableCell>{product.unit}</TableCell>
+                      <TableCell>{purchaseOder.id}</TableCell>
                       <TableCell>
-                        {product.categories && product.categories.name}
+                        {purchaseOder.purchaseOrderItems.map(
+                          (purchaseItem: any) => {
+                            return <span>{purchaseItem.products.name}, </span>;
+                          }
+                        )}
                       </TableCell>
+                      <TableCell>
+                        {purchaseOder.purchaseOrderItems.reduce(
+                          (acc: number, curr: any) => acc + curr.quantity,
+                          0
+                        )}
+                      </TableCell>
+                      <TableCell>{purchaseOder.status}</TableCell>
                     </TableRow>
                   );
                 })
               : isLoadingProduct !== true && (
-                  // <TableRow>
-                  //   <TableCell colSpan={5} className="text-center">
-                  //     Nenhum produto encontrado.
-                  //   </TableCell>
-                  // </TableRow>
                   <TableRow>
-                    <TableCell>
-                      <Button variant="outline" className="flex gap-2">
-                        <Pencil className="h-3 w-3" />
-                      </Button>
-                    </TableCell>
-                    <TableCell>1</TableCell>
-                    <TableCell>Alvejante, Detergente, Amaciante, Pasta para bri...</TableCell>
-                    <TableCell>15</TableCell>
-                    <TableCell>
-                      {" "}
-                      <span className="h-2 w-2 rounded-full bg-amber-500" />
-                      <span className="font-medium text-muted-foreground">
-                        A receber
-                      </span>
-                    </TableCell>
-                    <TableCell className="space-x-4">
-                      <Button variant="outline">Receber</Button>
-                      <Button variant="destructive">Cancelar</Button>
+                    <TableCell colSpan={5} className="text-center">
+                      Nenhuma compra encontrada.
                     </TableCell>
                   </TableRow>
                 )}
           </TableBody>
         </Table>
       </div>
-      <Pagination
-        pageIndex={0}
-        totalCount={10}
-        perPage={5}
-        onPageChange={() => {}}
-      />
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        {/* <ProductForm uuid={selectedProductUuid} /> */}
-      </Dialog>
+      {result && (
+        <Pagination
+          pageIndex={result.pageIndex}
+          totalCount={result.totalCount}
+          perPage={result.perPage}
+          onPageChange={handlePaginate}
+        />
+      )}
     </>
   );
 }
