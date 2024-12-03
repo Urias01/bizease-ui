@@ -12,112 +12,118 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-// const ordersFiltersSchema = z.object({
-//   orderId: z.string().optional(),
-//   customerName: z.string().optional(),
-//   status: z.string().optional(),
-// })
+const purcharsesFiltersSchema = z.object({
+  id: z.string().optional(),
+  status: z.string().optional(),
+});
 
-// type OrderFiltersSchema = z.infer<typeof ordersFiltersSchema>
+type PurcharsesFiltersSchema = z.infer<typeof purcharsesFiltersSchema>;
 
 export function PurcharsesTableFilters() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // const orderId = searchParams.get('orderId')
-  // const customerName = searchParams.get('customerName')
+  const id = searchParams.get("id");
   const status = searchParams.get("status");
 
   const { register, handleSubmit, reset, control } = useForm({
+    resolver: zodResolver(purcharsesFiltersSchema),
     defaultValues: {
       status: status || "all",
+      id: id || "",
     },
   });
 
-  // function handleFilter(data: OrderFiltersSchema) {
-  //   const orderId = data.orderId?.toString()
-  //   const customerName = data.customerName?.toString()
-  //   const status = data.status?.toString()
+  function handleFilter(data: PurcharsesFiltersSchema) {
+    const id = data.id?.toString();
+    const status = data.status?.toString();
 
-  //   setSearchParams((prev) => {
-  //     if (orderId) {
-  //       prev.set('orderId', orderId)
-  //     } else {
-  //       prev.delete('orderId')
-  //     }
+    setSearchParams((prev) => {
+      if (id) {
+        prev.set("id", id);
+      } else {
+        prev.delete("id");
+      }
 
-  //     if (customerName) {
-  //       prev.set('customerName', customerName)
-  //     } else {
-  //       prev.delete('customerName')
-  //     }
+      if (status) {
+        prev.set("status", status);
+      } else {
+        prev.delete("status");
+      }
 
-  //     if (status) {
-  //       prev.set('status', status)
-  //     } else {
-  //       prev.delete('status')
-  //     }
+      prev.set("page", "1");
 
-  //     prev.set('page', '1')
+      return prev;
+    });
+  }
 
-  //     return prev
-  //   })
-  // }
+  function handleClearFilters() {
+    setSearchParams((prev) => {
+      prev.delete("id");
+      prev.delete("customerName");
+      prev.delete("status");
+      prev.set("page", "1");
 
-  // function handleClearFilters() {
-  //   setSearchParams((prev) => {
-  //     prev.delete('orderId')
-  //     prev.delete('customerName')
-  //     prev.delete('status')
-  //     prev.set('page', '1')
+      return prev;
+    });
 
-  //     return prev
-  //   })
-
-  //   reset({
-  //     orderId: '',
-  //     customerName: '',
-  //     status: 'all',
-  //   })
-  // }
-
-  // const hasAnyFilter = !!orderId || !!customerName || !!status
+    reset({
+      id: "",
+      status: "all",
+    });
+  }
 
   return (
-    <form className="flex flex-col md:flex-row items-start gap-2">
+    <form
+      onSubmit={handleSubmit(handleFilter)}
+      className="flex flex-col md:flex-row items-start gap-2"
+    >
       <span className="text-sm font-semibold">Filtros:</span>
-      <Input placeholder="ID do fornecedor" className="h-8 w-full md:w-1/2" />
-      <Input placeholder="Nome do fornecedor" className="h-8 w-full md:w-1/2" />
-      <Controller
-        control={control}
-        name="status"
-        render={({ field: { name, onChange, value, disabled } }) => {
-          return (
-            <Select
-              name={name}
-              onValueChange={onChange}
-              value={value}
-              disabled={disabled}
-            >
-              <SelectTrigger className="h-8 w-full md:w-1/3">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos status</SelectItem>
-                <SelectItem value="pending">Ativo</SelectItem>
-                <SelectItem value="canceled">Inativo</SelectItem>
-              </SelectContent>
-            </Select>
-          );
-        }}
-      />
+      <div className="flex flex-wrap md:flex-row items-center gap-2 flex-1">
+        <Input
+          placeholder="ID da venda"
+          className="h-10 w-full md:w-1/3"
+          {...register("id")}
+        />
 
+        <Controller
+          control={control}
+          name="status"
+          render={({ field: { name, onChange, value, disabled } }) => {
+            return (
+              <Select
+                name={name}
+                onValueChange={onChange}
+                value={value}
+                disabled={disabled}
+              >
+                <SelectTrigger className="h-10 w-full md:w-1/4">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos status</SelectItem>
+                  <SelectItem value="REALIZADO">Realizado</SelectItem>
+                  <SelectItem value="CONFIRMADO">Confirmado</SelectItem>
+                  <SelectItem value="RECEBIDO">Recebido</SelectItem>
+                  <SelectItem value="CANCELADO">Cancelado</SelectItem>
+                </SelectContent>
+              </Select>
+            );
+          }}
+        />
+      </div>
       <div className="flex gap-2">
         <Button type="submit" variant="secondary" size="xs">
           <Search className="mr-2 h-4 w-4" />
           Filtrar resultados
         </Button>
-        <Button type="button" variant="outline" size="xs">
+        <Button
+          type="button"
+          variant="outline"
+          size="xs"
+          onClick={handleClearFilters}
+        >
           <X className="mr-2 h-4 w-4" />
           Remover filtros
         </Button>

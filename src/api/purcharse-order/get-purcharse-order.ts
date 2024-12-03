@@ -21,7 +21,7 @@ export async function getPurchaseOrder({
   status,
 }: GetPurchaseOrderQuery) {
   if (status === "all") {
-    status = "";
+    status = null;
   }
   const response = await api.get<GetPurchaseOrderResponse>('/purchase_orders', {
     params: {

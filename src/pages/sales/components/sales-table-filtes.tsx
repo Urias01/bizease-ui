@@ -1,4 +1,4 @@
-import { CalendarIcon, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 
@@ -11,19 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { addDays, format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ptBR } from "date-fns/locale";
-
 const salesTableFiltersSchema = z.object({
   id: z.string().optional(),
   status: z.string().optional(),
@@ -32,8 +21,6 @@ const salesTableFiltersSchema = z.object({
 type SalesTableFiltersSchema = z.infer<typeof salesTableFiltersSchema>;
 
 export function SalesTableFilters() {
-  const [date, setDate] = useState<Date>();
-
   const [searchParams, setSearchParams] = useSearchParams();
 
   const id = searchParams.get("id");
@@ -43,6 +30,7 @@ export function SalesTableFilters() {
     resolver: zodResolver(salesTableFiltersSchema),
     defaultValues: {
       status: status || "all",
+      id: id || "",
     },
   });
 
