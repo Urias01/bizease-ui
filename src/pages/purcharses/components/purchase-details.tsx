@@ -18,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { formatDistanceToNow } from "date-fns";
+import { getPurchaseOrderByUuid } from "@/api/purcharse-order/get-purchase-order-by-uuid";
 
 interface PurchaseDetailsProps {
   uuid: string;
@@ -25,26 +26,26 @@ interface PurchaseDetailsProps {
 }
 
 export function PurchaseDetails({ uuid, open }: PurchaseDetailsProps) {
-  const { data: salesOrder } = useQuery({
-    queryKey: ["sales-order-details", uuid],
-    queryFn: () => getSalesOrderByUuid({ uuid }),
+  const { data: purchaseOrder } = useQuery({
+    queryKey: ["purchase-order-details", uuid],
+    queryFn: () => getPurchaseOrderByUuid({ uuid }),
     enabled: open,
   });
 
   return (
     <DialogContent className="min-w-fit">
       <DialogHeader>
-        <DialogTitle>Pedido: {salesOrder && salesOrder.id}</DialogTitle>
+        <DialogTitle>Pedido: {purchaseOrder && purchaseOrder.id}</DialogTitle>
         <DialogDescription>Detalhes do pedido</DialogDescription>
       </DialogHeader>
-      {salesOrder && (
+      {purchaseOrder && (
         <div className="space-y-6">
           <Table>
             <TableBody>
               <TableRow>
                 <TableCell className="text-muted-foreground">Status</TableCell>
                 <TableCell className="flex justify-end">
-                  {salesOrder.status}
+                  {purchaseOrder.status}
                 </TableCell>
               </TableRow>
 
@@ -53,7 +54,7 @@ export function PurchaseDetails({ uuid, open }: PurchaseDetailsProps) {
                   Data do pedido
                 </TableCell>
                 <TableCell className="flex justify-end">
-                  {format(salesOrder.orderDate, "PPP", {
+                  {format(purchaseOrder.orderDate, "PPP", {
                     locale: ptBR,
                   })}
                 </TableCell>
@@ -64,7 +65,7 @@ export function PurchaseDetails({ uuid, open }: PurchaseDetailsProps) {
                   Data de entrega
                 </TableCell>
                 <TableCell className="flex justify-end">
-                  {format(salesOrder.deliveryDate, "PPP", {
+                  {format(purchaseOrder.deliveryDate, "PPP", {
                     locale: ptBR,
                   })}
                 </TableCell>
@@ -75,7 +76,7 @@ export function PurchaseDetails({ uuid, open }: PurchaseDetailsProps) {
                   Realizado há
                 </TableCell>
                 <TableCell className="flex justify-end">
-                  {formatDistanceToNow(salesOrder.createdAt, {
+                  {formatDistanceToNow(purchaseOrder.createdAt, {
                     locale: ptBR,
                     addSuffix: true,
                   })}
@@ -94,7 +95,7 @@ export function PurchaseDetails({ uuid, open }: PurchaseDetailsProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {salesOrder.salesOrderItems.map((item) => {
+              {purchaseOrder.purchaseOrderItems.map((item) => {
                 return (
                   <TableRow key={item.id}>
                     <TableCell>{item.products.name}</TableCell>
@@ -119,7 +120,7 @@ export function PurchaseDetails({ uuid, open }: PurchaseDetailsProps) {
                 <TableCell colSpan={3}>Total do pedido</TableCell>
                 <TableCell className="text-right font-medium">
                   {" "}
-                  {salesOrder.salesOrderItems
+                  {purchaseOrder.purchaseOrderItems
                     .reduce(
                       (total: number, item: any) =>
                         total + item.quantity * item.unitPrice,
