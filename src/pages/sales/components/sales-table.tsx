@@ -17,6 +17,9 @@ import { useQuery } from "@tanstack/react-query";
 import { getSalesOrder } from "@/api/sales-order-items/get-sales-order";
 import { SalesDetails } from "./sales-details";
 import { DialogTrigger } from "@/components/ui/dialog";
+import { toast } from "sonner";
+import { updateSalesOrderStatus } from "@/api/sales-order-items/update-sales-order-status";
+import { queryClient } from "@/lib/react-query";
 
 export function SalesTable() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -54,6 +57,39 @@ export function SalesTable() {
     setIsSalesOrderDetailOpen(true);
   };
 
+  const handleUpdateStatus = async (uuid: string, currentStatus: string) => {
+    let newStatus: string;
+
+    switch (currentStatus) {
+      case "PENDENTE":
+        newStatus = "CONFIRMADO"; // Exemplo: transição de PENDENTE para CONFIRMADO
+        break;
+      case "CONFIRMADO":
+        newStatus = "ENVIADO"; // Exemplo: transição de CONFIRMADO para ENVIADO
+        break;
+      case "ENVIADO":
+        newStatus = "ENTREGUE"; // Exemplo: transição de ENVIADO para ENTREGUE
+        break;
+      case "ENTREGUE":
+        newStatus = "DEVOLVIDO"; // Exemplo: transição de ENTREGUE para DEVOLVIDO
+        break;
+      default:
+        toast.error("Transição de status inválida ou não permitida");
+        return;
+    }
+
+    try {
+      const updatedOrder = await updateSalesOrderStatus(uuid, newStatus).then(
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["sales-orders"] })
+        }
+      );
+      toast.success(`Status alterado para ${newStatus}`);
+    } catch (error) {
+      toast.error("Erro ao atualizar o status da venda");
+    }
+  };
+
   return (
     <>
       <div className="rounded-md border">
@@ -83,7 +119,9 @@ export function SalesTable() {
                           <DialogTrigger asChild>
                             <Button
                               variant="outline"
-                              onClick={() => handleSalesOrderSelect(salesOder.uuid)}
+                              onClick={() =>
+                                handleSalesOrderSelect(salesOder.uuid)
+                              }
                             >
                               <Search className="h-3 w-3 cursor-pointer" />
                             </Button>
@@ -107,6 +145,17 @@ export function SalesTable() {
                         )}
                       </TableCell>
                       <TableCell>{salesOder.status}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="secondary"
+                          disabled={["ENTREGUE", "DEVOLVIDO"].includes(salesOder.status)}
+                          onClick={() =>
+                            handleUpdateStatus(salesOder.uuid, salesOder.status)
+                          }
+                        >
+                          Alterar Status
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })
@@ -128,7 +177,6 @@ export function SalesTable() {
           onPageChange={handlePaginate}
         />
       )}
-
     </>
   );
 }
