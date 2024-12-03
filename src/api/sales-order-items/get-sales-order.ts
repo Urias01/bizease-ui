@@ -20,6 +20,9 @@ export async function getSalesOrder({
   id,
   status,
 }: GetSalesOrderQuery) {
+  if (status === "all") {
+    status = "";
+  }
   const response = await api.get<GetSalesOrderResponse>('/sales_orders', {
     params: {
       page,
