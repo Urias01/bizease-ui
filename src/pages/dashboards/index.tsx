@@ -9,7 +9,7 @@ import { Loader2 } from "lucide-react";
 import { BuyingSellingMetrics } from "./components/buying-selling-metrics";
 import { InputLoss } from "./components/input-loss";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
-import { subDays, format } from "date-fns";
+import { subDays  } from "date-fns";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import {
@@ -28,6 +28,7 @@ import {
 } from "recharts";
 import { useQuery } from "@tanstack/react-query";
 import { getPopularProducts } from "@/api/products/get-popular-products";
+import { getRevenueByPeriod } from "@/api/sales-order-items/get-revenue-by-period";
 
 const COLOR_CLASSES = [
   "fill-sky-500",
@@ -38,15 +39,6 @@ const COLOR_CLASSES = [
 ];
 
 export function Dashboards() {
-  const chartData = [
-    { date: format(new Date(), "MM/dd/yyyy"), receipt: 213 },
-    { date: format(new Date(), "MM/dd/yyyy"), receipt: 32 },
-    { date: format(new Date(), "MM/dd/yyyy"), receipt: 113 },
-    { date: format(new Date(), "MM/dd/yyyy"), receipt: 80 },
-    { date: format(new Date(), "MM/dd/yyyy"), receipt: 15 },
-    { date: format(new Date(), "MM/dd/yyyy"), receipt: 58 },
-  ];
-
   const { data: popularProducts } = useQuery({
     queryKey: ["popular-products"],
     queryFn: () => getPopularProducts(),
@@ -55,6 +47,12 @@ export function Dashboards() {
   const [period, setPeriod] = useState<DateRange | undefined>({
     from: subDays(new Date(), 7),
     to: new Date(),
+  });
+
+  const { data: revenue } = useQuery({
+    queryKey: ["revenue", period],
+    queryFn: () => getRevenueByPeriod(period?.from!, period?.to!),
+    enabled: !!period,
   });
 
   return (
@@ -85,36 +83,42 @@ export function Dashboards() {
             </div>
           </CardHeader>
           <CardContent>
-            {chartData ? (
+            {revenue ? (
               <ResponsiveContainer width="100%" height={240}>
-                <LineChart data={chartData} style={{ fontSize: 12 }}>
-                  <XAxis
-                    dataKey="date"
-                    tickLine={false}
-                    axisLine={false}
-                    dy={16}
-                  />
-                  <YAxis
-                    stroke="#888"
-                    axisLine={false}
-                    width={80}
-                    tickLine={false}
-                    tickFormatter={(value: number) =>
-                      value.toLocaleString("pt-BR", {
-                        style: "currency",
-                        currency: "BRL",
-                      })
-                    }
-                  />
-                  <CartesianGrid vertical={false} className="stroke-muted" />
-                  <Line
-                    type="linear"
-                    strokeWidth={2}
-                    dataKey="receipt"
-                    stroke={"#aa2341"}
-                  />
-                  <Tooltip />
-                </LineChart>
+                {revenue && Array.isArray(revenue) ? (
+                  <LineChart data={revenue} style={{ fontSize: 12 }}>
+                    <XAxis
+                      dataKey="date"
+                      tickLine={false}
+                      axisLine={false}
+                      dy={16}
+                    />
+                    <YAxis
+                      stroke="#888"
+                      axisLine={false}
+                      width={80}
+                      tickLine={false}
+                      tickFormatter={(value: number) =>
+                        value.toLocaleString("pt-BR", {
+                          style: "currency",
+                          currency: "BRL",
+                        })
+                      }
+                    />
+                    <CartesianGrid vertical={false} className="stroke-muted" />
+                    <Line
+                      type="linear"
+                      strokeWidth={2}
+                      dataKey="receipt"
+                      stroke={"#aa2341"}
+                    />
+                    <Tooltip />
+                  </LineChart>
+                ) : (
+                  <div className="text-center p-5 text-gray-600 dark:text-gray-400 text-md">
+                    Não há dados para exibir no momento.
+                  </div>
+                )}
               </ResponsiveContainer>
             ) : (
               <div className="flex h-[240px] w-full items-center justify-center">
