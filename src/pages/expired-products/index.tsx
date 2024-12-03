@@ -1,5 +1,5 @@
-import { ProductTable } from "../products/components/product-table";
 import { ProductsTableFilters } from "../products/components/products-table-filters";
+import { ExpiredProductTable } from "./components/expired-product-table";
 
 export function ExpiredProducts() {
   return (
@@ -12,7 +12,7 @@ export function ExpiredProducts() {
 
       <section className="space-y-4">
         <ProductsTableFilters />
-        <ProductTable />
+        <ExpiredProductTable />
       </section>
 
       <footer></footer>
