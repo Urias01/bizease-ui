@@ -15,10 +15,14 @@ import { z } from "zod";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getSalesOrder } from "@/api/sales-order-items/get-sales-order";
+import { SalesDetails } from "./sales-details";
+import { DialogTrigger } from "@/components/ui/dialog";
 
 export function SalesTable() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSalesOrderDetailOpen, setIsSalesOrderDetailOpen] = useState(false);
+  const [selectedSalesOrderUuid, setSelectedSalesOrderUuid] =
+    useState<string>("");
 
   const id = searchParams.get("id");
   const status = searchParams.get("status");
@@ -45,6 +49,11 @@ export function SalesTable() {
     });
   }
 
+  const handleSalesOrderSelect = (productUuid: string) => {
+    setSelectedSalesOrderUuid(productUuid);
+    setIsSalesOrderDetailOpen(true);
+  };
+
   return (
     <>
       <div className="rounded-md border">
@@ -56,7 +65,6 @@ export function SalesTable() {
               <TableHead>Produtos</TableHead>
               <TableHead>Quantidade</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -65,9 +73,26 @@ export function SalesTable() {
                   return (
                     <TableRow key={salesOder.id}>
                       <TableCell>
-                        <Button variant="outline" className="flex gap-2">
-                          <Search className="h-3 w-3" />
-                        </Button>
+                        <Dialog
+                          open={
+                            isSalesOrderDetailOpen &&
+                            selectedSalesOrderUuid === salesOder.uuid
+                          }
+                          onOpenChange={setIsSalesOrderDetailOpen}
+                        >
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="outline"
+                              onClick={() => handleSalesOrderSelect(salesOder.uuid)}
+                            >
+                              <Search className="h-3 w-3 cursor-pointer" />
+                            </Button>
+                          </DialogTrigger>
+                          <SalesDetails
+                            uuid={selectedSalesOrderUuid}
+                            open={isSalesOrderDetailOpen}
+                          />
+                        </Dialog>
                       </TableCell>
                       <TableCell>{salesOder.id}</TableCell>
                       <TableCell>
@@ -104,9 +129,6 @@ export function SalesTable() {
         />
       )}
 
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        {/* <ProductForm uuid={selectedProductUuid} /> */}
-      </Dialog>
     </>
   );
 }
