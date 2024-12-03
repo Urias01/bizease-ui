@@ -81,10 +81,23 @@ export function Home() {
               </span> */}
               <p className="text-xs text-muted-foreground">
                 <>
-                  <span className="text-emerald-500 dark:text-emerald-400">
-                    5%
-                  </span>{" "}
-                  em relação ao mês passado
+                  {(() => {
+                    const randomNumber =
+                      Math.floor(Math.random() * (15 - -15 + 1)) + -15; // Gera o número aleatório
+                    const textColor =
+                      randomNumber > 0
+                        ? "text-emerald-500 dark:text-emerald-400"
+                        : "text-red-500 dark:text-red-400"; // Define a cor
+                    const sign = randomNumber < 0 ? "" : ""; // Adiciona o sinal de menor se for negativo
+
+                    return (
+                      <span className={textColor}>
+                        {sign}
+                        {randomNumber}%
+                      </span>
+                    );
+                  })()}{" "}
+                  em relação a semana passada
                 </>
               </p>
             </>
@@ -104,8 +117,23 @@ export function Home() {
               </span> */}
               <p className="text-xs text-muted-foreground">
                 <>
-                  <span className="text-rose-500 dark:text-rose-400">-5%</span>{" "}
-                  em relação ao mês passado
+                  {(() => {
+                    const randomNumber =
+                      Math.floor(Math.random() * (15 - -15 + 1)) + -15; // Gera o número aleatório
+                    const textColor =
+                      randomNumber > 0
+                        ? "text-emerald-500 dark:text-emerald-400"
+                        : "text-red-500 dark:text-red-400"; // Define a cor
+                    const sign = randomNumber < 0 ? "" : ""; // Adiciona o sinal de menor se for negativo
+
+                    return (
+                      <span className={textColor}>
+                        {sign}
+                        {randomNumber}%
+                      </span>
+                    );
+                  })()}{" "}
+                  em relação a semana passada
                 </>
               </p>
             </>
@@ -125,9 +153,22 @@ export function Home() {
               </span> */}
               <p className="text-xs text-muted-foreground">
                 <>
-                  <span className="text-emerald-500 dark:text-emerald-400">
-                    5%
-                  </span>{" "}
+                  {(() => {
+                    const randomNumber =
+                      Math.floor(Math.random() * (15 - -15 + 1)) + -15; // Gera o número aleatório
+                    const textColor =
+                      randomNumber > 0
+                        ? "text-emerald-500 dark:text-emerald-400"
+                        : "text-red-500 dark:text-red-400"; // Define a cor
+                    const sign = randomNumber < 0 ? "" : ""; // Adiciona o sinal de menor se for negativo
+
+                    return (
+                      <span className={textColor}>
+                        {sign}
+                        {randomNumber}%
+                      </span>
+                    );
+                  })()}{" "}
                   em relação ao mês passado
                 </>
               </p>
@@ -148,7 +189,22 @@ export function Home() {
               </span> */}
               <p className="text-xs text-muted-foreground">
                 <>
-                  <span className="text-rose-500 dark:text-rose-400">-5%</span>{" "}
+                  {(() => {
+                    const randomNumber =
+                      Math.floor(Math.random() * (15 - -15 + 1)) + -15; // Gera o número aleatório
+                    const textColor =
+                      randomNumber > 0
+                        ? "text-emerald-500 dark:text-emerald-400"
+                        : "text-red-500 dark:text-red-400"; // Define a cor
+                    const sign = randomNumber < 0 ? "" : ""; // Adiciona o sinal de menor se for negativo
+
+                    return (
+                      <span className={textColor}>
+                        {sign}
+                        {randomNumber}%
+                      </span>
+                    );
+                  })()}{" "}
                   em relação ao mês passado
                 </>
               </p>
