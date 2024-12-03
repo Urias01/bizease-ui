@@ -20,84 +20,83 @@ import { Calendar } from "@/components/ui/calendar";
 import { addDays, format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ptBR } from "date-fns/locale";
 
-// const ordersFiltersSchema = z.object({
-//   orderId: z.string().optional(),
-//   customerName: z.string().optional(),
-//   status: z.string().optional(),
-// })
+const salesTableFiltersSchema = z.object({
+  id: z.string().optional(),
+  status: z.string().optional(),
+});
 
-// type OrderFiltersSchema = z.infer<typeof ordersFiltersSchema>
+type SalesTableFiltersSchema = z.infer<typeof salesTableFiltersSchema>;
 
 export function SalesTableFilters() {
   const [date, setDate] = useState<Date>();
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // const orderId = searchParams.get('orderId')
-  // const customerName = searchParams.get('customerName')
+  const id = searchParams.get("id");
   const status = searchParams.get("status");
 
   const { register, handleSubmit, reset, control } = useForm({
+    resolver: zodResolver(salesTableFiltersSchema),
     defaultValues: {
       status: status || "all",
     },
   });
 
-  // function handleFilter(data: OrderFiltersSchema) {
-  //   const orderId = data.orderId?.toString()
-  //   const customerName = data.customerName?.toString()
-  //   const status = data.status?.toString()
+  function handleFilter(data: SalesTableFiltersSchema) {
+    const id = data.id?.toString();
+    const status = data.status?.toString();
 
-  //   setSearchParams((prev) => {
-  //     if (orderId) {
-  //       prev.set('orderId', orderId)
-  //     } else {
-  //       prev.delete('orderId')
-  //     }
+    setSearchParams((prev) => {
+      if (id) {
+        prev.set("id", id);
+      } else {
+        prev.delete("id");
+      }
 
-  //     if (customerName) {
-  //       prev.set('customerName', customerName)
-  //     } else {
-  //       prev.delete('customerName')
-  //     }
+      if (status) {
+        prev.set("status", status);
+      } else {
+        prev.delete("status");
+      }
 
-  //     if (status) {
-  //       prev.set('status', status)
-  //     } else {
-  //       prev.delete('status')
-  //     }
+      prev.set("page", "1");
 
-  //     prev.set('page', '1')
+      return prev;
+    });
+  }
 
-  //     return prev
-  //   })
-  // }
+  function handleClearFilters() {
+    setSearchParams((prev) => {
+      prev.delete("id");
+      prev.delete("customerName");
+      prev.delete("status");
+      prev.set("page", "1");
 
-  // function handleClearFilters() {
-  //   setSearchParams((prev) => {
-  //     prev.delete('orderId')
-  //     prev.delete('customerName')
-  //     prev.delete('status')
-  //     prev.set('page', '1')
+      return prev;
+    });
 
-  //     return prev
-  //   })
-
-  //   reset({
-  //     orderId: '',
-  //     customerName: '',
-  //     status: 'all',
-  //   })
-  // }
-
-  // const hasAnyFilter = !!orderId || !!customerName || !!status
+    reset({
+      id: "",
+      status: "all",
+    });
+  }
 
   return (
-    <form className="flex flex-col md:flex-row items-start gap-2">
+    <form
+      onSubmit={handleSubmit(handleFilter)}
+      className="flex flex-col md:flex-row items-start gap-2"
+    >
       <span className="text-sm font-semibold">Filtros:</span>
       <div className="flex flex-wrap md:flex-row items-center gap-2 flex-1">
-        <Input placeholder="ID da venda" className="h-10 w-full md:w-1/3" />
+        <Input
+          placeholder="ID da venda"
+          className="h-10 w-full md:w-1/3"
+          {...register("id")}
+        />
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -107,8 +106,14 @@ export function SalesTableFilters() {
                 !date && "text-muted-foreground"
               )}
             >
-              <CalendarIcon className="h-4 w-4"/>
-              {date ? format(date, "PPP") : <span>Selecione uma data</span>}
+              <CalendarIcon className="h-4 w-4" />
+              {date ? (
+                format(date, "PPP", {
+                  locale: ptBR,
+                })
+              ) : (
+                <span>Selecione uma data</span>
+              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="flex w-auto flex-col space-y-2 p-2">
@@ -149,8 +154,12 @@ export function SalesTableFilters() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todos status</SelectItem>
-                  <SelectItem value="pending">Ativo</SelectItem>
-                  <SelectItem value="canceled">Inativo</SelectItem>
+                  <SelectItem value="PENDENTE">Pendente</SelectItem>
+                  <SelectItem value="CONFIRMADO">Confirmado</SelectItem>
+                  <SelectItem value="ENVIADO">Enviado</SelectItem>
+                  <SelectItem value="ENTREGUE">Entregue</SelectItem>
+                  <SelectItem value="CANCELADO">Cancelado</SelectItem>
+                  <SelectItem value="DEVOLVIDO">Devolvido</SelectItem>
                 </SelectContent>
               </Select>
             );
@@ -162,7 +171,12 @@ export function SalesTableFilters() {
           <Search className="mr-2 h-4 w-4" />
           Filtrar resultados
         </Button>
-        <Button type="button" variant="outline" size="xs">
+        <Button
+          type="button"
+          variant="outline"
+          size="xs"
+          onClick={handleClearFilters}
+        >
           <X className="mr-2 h-4 w-4" />
           Remover filtros
         </Button>

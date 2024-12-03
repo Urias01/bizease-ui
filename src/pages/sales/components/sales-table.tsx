@@ -8,19 +8,20 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Dialog } from "@radix-ui/react-dialog";
-import { Pencil } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { getSalesOrder } from "@/api/sales-order-items/get-sales-order";
 
 export function SalesTable() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const categorieId = searchParams.get("categorieId");
-  const name = searchParams.get("name");
+  const id = searchParams.get("id");
+  const status = searchParams.get("status");
 
   const page = z.coerce
     .number()
@@ -28,9 +29,21 @@ export function SalesTable() {
     .parse(searchParams.get("page") ?? "1");
 
   const { data: result, isLoading: isLoadingProduct } = useQuery({
-    queryKey: ["products", page, name, categorieId],
-    queryFn: (): any => {},
+    queryKey: ["sales-orders", page, status, id],
+    queryFn: () =>
+      getSalesOrder({
+        page,
+        status,
+        id,
+      }),
   });
+
+  function handlePaginate(pageIndex: number) {
+    setSearchParams((state) => {
+      state.set("page", (pageIndex + 1).toString());
+      return state;
+    });
+  }
 
   return (
     <>
@@ -47,62 +60,49 @@ export function SalesTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* {isLoadingProduct && <ProductSkeletonTable />} */}
             {result?.data?.length !== undefined && result?.data?.length > 0
-              ? result.data.map((product: any) => {
+              ? result.data.map((salesOder: any) => {
                   return (
-                    <TableRow key={product.id}>
+                    <TableRow key={salesOder.id}>
                       <TableCell>
                         <Button variant="outline" className="flex gap-2">
-                          <Pencil className="h-3 w-3" />
+                          <Search className="h-3 w-3" />
                         </Button>
                       </TableCell>
-                      <TableCell>{product.id}</TableCell>
-                      <TableCell>{product.name}</TableCell>
-                      <TableCell>{product.unit}</TableCell>
+                      <TableCell>{salesOder.id}</TableCell>
                       <TableCell>
-                        {product.categories && product.categories.name}
+                        {salesOder.salesOrderItems.map((salesItem: any) => {
+                          return <span>{salesItem.products.name}, </span>;
+                        })}
                       </TableCell>
+                      <TableCell>
+                        {salesOder.salesOrderItems.reduce(
+                          (acc: number, curr: any) => acc + curr.quantity,
+                          0
+                        )}
+                      </TableCell>
+                      <TableCell>{salesOder.status}</TableCell>
                     </TableRow>
                   );
                 })
               : isLoadingProduct !== true && (
-                  // <TableRow>
-                  //   <TableCell colSpan={5} className="text-center">
-                  //     Nenhum produto encontrado.
-                  //   </TableCell>
-                  // </TableRow>
                   <TableRow>
-                    <TableCell>
-                      <Button variant="outline" className="flex gap-2">
-                        <Pencil className="h-3 w-3" />
-                      </Button>
-                    </TableCell>
-                    <TableCell>1</TableCell>
-                    <TableCell>Alvejante, Detergente, Amaciante, Pasta para bri...</TableCell>
-                    <TableCell>15</TableCell>
-                    <TableCell>
-                      {" "}
-                      <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                      <span className="font-medium text-muted-foreground">
-                        Pendente
-                      </span>
-                    </TableCell>
-                    <TableCell className="space-x-4">
-                      <Button variant="outline">Confirmar</Button>
-                      <Button variant="destructive">Cancelar</Button>
+                    <TableCell colSpan={5} className="text-center">
+                      Nenhum produto encontrado.
                     </TableCell>
                   </TableRow>
                 )}
           </TableBody>
         </Table>
       </div>
-      <Pagination
-        pageIndex={0}
-        totalCount={10}
-        perPage={5}
-        onPageChange={() => {}}
-      />
+      {result && (
+        <Pagination
+          pageIndex={result.pageIndex}
+          totalCount={result.totalCount}
+          perPage={result.perPage}
+          onPageChange={handlePaginate}
+        />
+      )}
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         {/* <ProductForm uuid={selectedProductUuid} /> */}
