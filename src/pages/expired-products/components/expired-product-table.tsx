@@ -9,9 +9,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { z } from "zod";
-import { Pencil } from "lucide-react";
 import { Pagination } from "@/components/pagination";
-import { Button } from "@/components/ui/button";
 import { ProductSkeletonTable } from "@/pages/products/components/product-skeleton-table";
 import { getExpiredProducts } from "@/api/products/get-expired-products";
 
@@ -49,7 +47,6 @@ export function ExpiredProductTable() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>#</TableHead>
               <TableHead>Id.</TableHead>
               <TableHead>Nome</TableHead>
               <TableHead>Quantidade</TableHead>
@@ -62,11 +59,6 @@ export function ExpiredProductTable() {
               ? result.data.map((product) => {
                   return (
                     <TableRow key={product.product_id}>
-                      <TableCell>
-                        <Button variant="outline">
-                          <Pencil className="h-3 w-3 cursor-pointer" />
-                        </Button>
-                      </TableCell>
                       <TableCell>{product.product_id}</TableCell>
                       <TableCell>{product.product_name}</TableCell>
                       <TableCell>{product.expired_quantity}</TableCell>
