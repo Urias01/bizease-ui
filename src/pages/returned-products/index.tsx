@@ -1,5 +1,5 @@
-import { ProductTable } from "../products/components/product-table";
 import { ProductsTableFilters } from "../products/components/products-table-filters";
+import { ReturnedProductTable } from "./components/returned-product-table";
 
 export function ReturnedProducts() {
   return (
@@ -12,7 +12,7 @@ export function ReturnedProducts() {
 
       <section className="space-y-4">
         <ProductsTableFilters />
-        <ProductTable />
+        <ReturnedProductTable />
       </section>
 
       <footer></footer>
