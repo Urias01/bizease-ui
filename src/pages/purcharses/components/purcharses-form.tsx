@@ -62,7 +62,7 @@ const purcharseOrderSchema = z.object({
         : parseFloat(value)
     ),
   productUuid: z.string(),
-  expirationDate: z.coerce.date(),
+  expirationDate: z.coerce.date().optional(),
 });
 
 type PurcharseOrderSchema = z.infer<typeof purcharseOrderSchema>;

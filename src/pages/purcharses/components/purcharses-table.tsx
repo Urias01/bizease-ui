@@ -17,6 +17,9 @@ import { useQuery } from "@tanstack/react-query";
 import { getPurchaseOrder } from "@/api/purcharse-order/get-purcharse-order";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { PurchaseDetails } from "./purchase-details";
+import { toast } from "sonner";
+import { updatePurchaseOrderStatus } from "@/api/purcharse-order/update-purchase-order-status";
+import { queryClient } from "@/lib/react-query";
 
 export function PurcharsesTable() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -57,6 +60,33 @@ export function PurcharsesTable() {
     });
   }
 
+  const handleUpdateStatus = async (uuid: string, currentStatus: string) => {
+    let newStatus: string;
+
+    switch (currentStatus) {
+      case "REALIZADO":
+        newStatus = "CONFIRMADO"; // Exemplo: transição de PENDENTE para CONFIRMADO
+        break;
+      case "CONFIRMADO":
+        newStatus = "RECEBIDO"; // Exemplo: transição de CONFIRMADO para ENVIADO
+        break;
+      default:
+        toast.error("Transição de status inválida ou não permitida");
+        return;
+    }
+
+    try {
+      const updatedOrder = await updatePurchaseOrderStatus(
+        uuid,
+        newStatus
+      ).then(() => {
+        queryClient.invalidateQueries({ queryKey: ["purchase-orders"] });
+      });
+      toast.success(`Status alterado para ${newStatus}`);
+    } catch (error) {
+      toast.error("Erro ao atualizar o status da venda");
+    }
+  };
 
   return (
     <>
@@ -116,6 +146,20 @@ export function PurcharsesTable() {
                         )}
                       </TableCell>
                       <TableCell>{purchaseOder.status}</TableCell>
+                      <TableCell>
+                        <Button
+                          variant="secondary"
+                          disabled={["RECEBIDO"].includes(purchaseOder.status)}
+                          onClick={() =>
+                            handleUpdateStatus(
+                              purchaseOder.uuid,
+                              purchaseOder.status
+                            )
+                          }
+                        >
+                          Alterar Status
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })
